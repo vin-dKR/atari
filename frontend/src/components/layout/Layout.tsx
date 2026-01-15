@@ -1,0 +1,28 @@
+import React, { useState } from 'react'
+import { Outlet } from 'react-router-dom'
+import { Sidebar } from '../dashboard/Sidebar'
+import { Header } from './Header'
+
+export const Layout: React.FC = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(true)
+
+    return (
+        <div className="flex min-h-screen bg-[#FAF9F6]">
+            <Sidebar
+                isOpen={sidebarOpen}
+                onToggle={() => setSidebarOpen(!sidebarOpen)}
+            />
+            <div
+                className="flex-1 flex flex-col min-h-screen transition-all duration-300"
+                style={{
+                    marginLeft: sidebarOpen ? '16rem' : '4rem', // 256px = 16rem, 64px = 4rem
+                }}
+            >
+                <Header />
+                <main className="flex-1 overflow-y-auto min-h-0 p-6">
+                    <Outlet />
+                </main>
+            </div>
+        </div>
+    )
+}

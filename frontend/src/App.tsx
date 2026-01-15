@@ -1,23 +1,148 @@
-import { useState } from 'react'
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from 'react-router-dom'
+import { Layout } from './components/layout/Layout'
+import { Dashboard } from './components/dashboard/Dashboard'
+import { Login } from './pages/Login'
+import { ProtectedRoute } from './components/auth/ProtectedRoute'
+import { AllMasters } from './components/dashboard/AllMasters'
+import { FormManagement } from './components/dashboard/FormManagement'
+import { ViewZones } from './components/dashboard/ViewZones'
+import { ViewStates } from './components/dashboard/ViewStates'
+import { ViewOrganizations } from './components/dashboard/ViewOrganizations'
+import { ViewDistricts } from './components/dashboard/ViewDistricts'
+import { MasterView } from './components/dashboard/masters/MasterView'
+import { RoleManagement } from './pages/RoleManagement'
+import { UserManagement } from './pages/UserManagement'
+import { ModuleImages } from './pages/ModuleImages'
+import { Targets } from './pages/Targets'
+import { LogHistory } from './pages/LogHistory'
+import { Notifications } from './pages/Notifications'
+import { Reports } from './pages/Reports'
+
 
 function App() {
-    const [count, setCount] = useState(0)
-
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-                <h1 className="text-3xl font-bold text-gray-800 mb-4">
-                    React + Tailwind CSS
-                </h1>
-                <p className="text-gray-600 mb-6">Your frontend is ready!</p>
-                <button
-                    onClick={() => setCount(count => count + 1)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors"
+        <Router>
+            <Routes>
+                {/* Public Routes */}
+                <Route path="/login" element={<Login />} />
+
+                {/* Protected Routes */}
+                <Route
+                    element={
+                        <ProtectedRoute>
+                            <Layout />
+                        </ProtectedRoute>
+                    }
                 >
-                    Count: {count}
-                </button>
-            </div>
-        </div>
+                    <Route
+                        path="/"
+                        element={<Navigate to="/dashboard" replace />}
+                    />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* All Masters Routes */}
+                    <Route path="/all-master" element={<AllMasters />} />
+                    <Route path="/all-master/basic" element={<AllMasters />} />
+                    <Route path="/all-master/oft-fld" element={<AllMasters />} />
+                    <Route path="/all-master/training-extension" element={<AllMasters />} />
+                    <Route path="/all-master/production-projects" element={<AllMasters />} />
+                    <Route path="/all-master/publications" element={<AllMasters />} />
+
+                    {/* Basic Masters */}
+                    <Route path="/all-master/zones" element={<ViewZones />} />
+                    <Route path="/all-master/states" element={<ViewStates />} />
+                    <Route path="/all-master/organizations" element={<ViewOrganizations />} />
+                    <Route path="/all-master/universities" element={<ViewOrganizations />} />
+                    <Route path="/all-master/districts" element={<ViewDistricts />} />
+
+                    {/* OFT Master */}
+                    <Route path="/all-master/oft/subject" element={<MasterView title="Subject Master" fields={['name']} />} />
+                    <Route path="/all-master/oft/thematic-area" element={<MasterView title="Thematic Area Master" fields={['name']} />} />
+
+                    {/* FLD Master */}
+                    <Route path="/all-master/fld/sector" element={<MasterView title="Sector Master" fields={['name']} />} />
+                    <Route path="/all-master/fld/thematic-area" element={<MasterView title="FLD Thematic Area Master" fields={['name']} />} />
+                    <Route path="/all-master/fld/category" element={<MasterView title="Category Master" fields={['name']} />} />
+                    <Route path="/all-master/fld/sub-category" element={<MasterView title="Sub-category Master" fields={['name']} />} />
+                    <Route path="/all-master/fld/crop" element={<MasterView title="Crop Master" fields={['name']} />} />
+
+                    {/* CFLD Master */}
+                    <Route path="/all-master/cfld-crop" element={<MasterView title="CFLD Crop Master" fields={['name']} />} />
+
+                    {/* Training Master */}
+                    <Route path="/all-master/training-type" element={<MasterView title="Training Type Master" fields={['name']} />} />
+                    <Route path="/all-master/training-area" element={<MasterView title="Training Area Master" fields={['name']} />} />
+                    <Route path="/all-master/training-thematic" element={<MasterView title="Training Thematic Area Master" fields={['name']} />} />
+
+                    {/* Extension & Events */}
+                    <Route path="/all-master/extension-activity" element={<MasterView title="Extension Activity Master" fields={['name']} />} />
+                    <Route path="/all-master/other-extension-activity" element={<MasterView title="Other Extension Activity Master" fields={['name']} />} />
+                    <Route path="/all-master/events" element={<MasterView title="Events Master" fields={['name']} />} />
+
+                    {/* Production */}
+                    <Route path="/all-master/product-category" element={<MasterView title="Product Category Master" fields={['name']} />} />
+                    <Route path="/all-master/product-type" element={<MasterView title="Product Type Master" fields={['name']} />} />
+                    <Route path="/all-master/product" element={<MasterView title="Products Master" fields={['name']} />} />
+
+                    {/* Climate Resilient Agriculture */}
+                    <Route path="/all-master/cra-croping-system" element={<MasterView title="Cropping System Master" fields={['name']} />} />
+                    <Route path="/all-master/cra-farming-system" element={<MasterView title="Farming System Master" fields={['name']} />} />
+
+                    {/* ARYA */}
+                    <Route path="/all-master/arya-enterprise" element={<MasterView title="ARYA Enterprise Master" fields={['name']} />} />
+
+                    {/* Publications */}
+                    <Route path="/all-master/publication-item" element={<MasterView title="Publication Items Master" fields={['name']} />} />
+
+                    {/* Catch-all for all-master routes */}
+                    <Route path="/all-master/*" element={<AllMasters />} />
+                    <Route
+                        path="/role-view"
+                        element={<RoleManagement />}
+                    />
+                    <Route
+                        path="/view-users"
+                        element={<UserManagement />}
+                    />
+                    <Route
+                        path="/module-images"
+                        element={<ModuleImages />}
+                    />
+                    <Route
+                        path="/targets"
+                        element={<Targets />}
+                    />
+                    <Route
+                        path="/view-log-history"
+                        element={<LogHistory />}
+                    />
+                    <Route
+                        path="/view-email-notifications"
+                        element={<Notifications />}
+                    />
+                    <Route
+                        path="/all-reports"
+                        element={<Reports />}
+                    />
+                    <Route
+                        path="/forms"
+                        element={<FormManagement />}
+                    />
+                    <Route
+                        path="/forms/*"
+                        element={<FormManagement />}
+                    />
+                    <Route
+                        path="*"
+                        element={<Navigate to="/dashboard" replace />}
+                    />
+                </Route>
+            </Routes>
+        </Router>
     )
 }
 

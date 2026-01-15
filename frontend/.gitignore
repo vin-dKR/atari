@@ -46,3 +46,6 @@ coverage
 # Bun
 .bun
 bun.lockb
+
+# SUPPORTING DOCUMENTS
+UI_UX_IMPROVEMENTS.md
