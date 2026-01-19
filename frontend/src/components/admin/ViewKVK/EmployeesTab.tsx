@@ -65,7 +65,7 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
         <Card>
             <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <h3 className="text-xl font-bold text-emerald-700">
+                    <h3 className="text-xl font-bold text-[#487749]">
                         Employees ({staff.length})
                     </h3>
                     <div className="flex gap-2 flex-wrap">
@@ -100,26 +100,26 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
                     <div className="overflow-x-auto">
                         <table className="w-full border-collapse">
                             <thead>
-                                <tr className="bg-emerald-50 border-b border-[#E0E0E0]">
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                <tr className="bg-[#E8F5E9] border-b border-[#E0E0E0]">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Staff Name
                                     </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Post
                                     </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Mobile
                                     </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Email
                                     </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Discipline
                                     </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Job Type
                                     </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                         Status
                                     </th>
                                 </tr>
@@ -154,7 +154,7 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
                                                     Transferred
                                                 </span>
                                             ) : (
-                                                <span className="px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-xl">
+                                                <span className="px-2 py-1 text-xs font-medium bg-[#E8F5E9] text-[#487749] rounded-xl">
                                                     Active
                                                 </span>
                                             )}

@@ -71,7 +71,7 @@ export const QuickTables: React.FC = () => {
                         onClick={() =>
                             handleRowClick('/forms/employee-details')
                         }
-                        className="mt-4 flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
+                        className="mt-4 flex items-center gap-2 text-sm text-[#487749] hover:text-[#487749] transition-colors"
                     >
                         View All <ArrowRight className="w-4 h-4" />
                     </button>
@@ -136,7 +136,7 @@ export const QuickTables: React.FC = () => {
                     </div>
                     <button
                         onClick={() => handleRowClick('/forms/infrastructure')}
-                        className="mt-4 flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
+                        className="mt-4 flex items-center gap-2 text-sm text-[#487749] hover:text-[#487749] transition-colors"
                     >
                         View All <ArrowRight className="w-4 h-4" />
                     </button>
@@ -187,7 +187,7 @@ export const QuickTables: React.FC = () => {
                                                     className={`px-2 py-1 rounded text-xs ${
                                                         vehicle.status ===
                                                         'Active'
-                                                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                                            ? 'bg-[#E8F5E9] text-[#487749] border border-[#C8E6C9]'
                                                             : 'bg-[#FFF3E0] text-[#FF9800]'
                                                     }`}
                                                 >
@@ -209,7 +209,7 @@ export const QuickTables: React.FC = () => {
                     </div>
                     <button
                         onClick={() => handleRowClick('/forms/vehicle-details')}
-                        className="mt-4 flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
+                        className="mt-4 flex items-center gap-2 text-sm text-[#487749] hover:text-[#487749] transition-colors"
                     >
                         View All <ArrowRight className="w-4 h-4" />
                     </button>

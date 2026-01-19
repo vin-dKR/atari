@@ -4,7 +4,7 @@ export const LogHistory: React.FC = () => {
     return (
         <div>
             <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-emerald-700">Log History</h1>
+                <h1 className="text-2xl font-semibold text-[#487749]">Log History</h1>
                 <p className="text-sm text-[#757575] mt-1">
                     View system activity logs and history
                 </p>

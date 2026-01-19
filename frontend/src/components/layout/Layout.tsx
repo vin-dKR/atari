@@ -7,7 +7,7 @@ export const Layout: React.FC = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
 
     return (
-        <div className="flex min-h-screen bg-[#FAF9F6]">
+        <div className="flex min-h-screen bg-[#F5F5F5]">
             <Sidebar
                 isOpen={sidebarOpen}
                 onToggle={() => setSidebarOpen(!sidebarOpen)}

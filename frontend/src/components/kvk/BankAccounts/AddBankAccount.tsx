@@ -72,13 +72,13 @@ export const AddBankAccount: React.FC<AddBankAccountProps> = ({
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label className="block text-sm font-medium text-emerald-700 mb-2">
+                <label className="block text-sm font-medium text-[#487749] mb-2">
                     Account Type
                 </label>
                 <select
                     value={formData.account_type || 'Kvk'}
                     onChange={e => setFormData({ ...formData, account_type: e.target.value })}
-                    className={`w-full h-12 px-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] ${
+                    className={`w-full h-12 px-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] bg-white text-[#212121] ${
                         errors.account_type ? 'border-red-300' : 'border-[#E0E0E0]'
                     }`}
                 >

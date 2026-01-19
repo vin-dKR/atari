@@ -4,7 +4,7 @@ export const Reports: React.FC = () => {
     return (
         <div>
             <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-emerald-700">Reports</h1>
+                <h1 className="text-2xl font-semibold text-[#487749]">Reports</h1>
                 <p className="text-sm text-[#757575] mt-1">
                     View and generate system reports
                 </p>

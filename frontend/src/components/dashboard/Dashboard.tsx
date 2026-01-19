@@ -36,16 +36,16 @@ export const Dashboard: React.FC = () => {
 
     return (
         <>
-            <div className="min-h-screen bg-emerald-50/30 p-4 lg:p-6">
+            <div className="min-h-screen bg-[#F5F5F5] p-4 lg:p-6">
                 <div className="max-w-7xl mx-auto">
                     {/* Header Section */}
                     <div className="mb-6">
                         <div className="flex items-center justify-between mb-4">
                             <div>
-                                <h1 className="text-2xl font-semibold text-emerald-900">
+                                <h1 className="text-2xl font-semibold text-[#212121]">
                                     Dashboard
                                 </h1>
-                                <p className="text-sm text-emerald-600 mt-1">
+                                <p className="text-sm text-[#757575] mt-1">
                                     Overview of your system activities
                                 </p>
                             </div>
@@ -80,17 +80,17 @@ export const Dashboard: React.FC = () => {
                 size="sm"
             >
                 <div className="space-y-4">
-                    <p className="text-emerald-700">
+                    <p className="text-[#757575]">
                         Are you sure you want to logout? You will need to login
                         again to access the system.
                     </p>
                     {user && (
-                        <div className="bg-emerald-50 border border-emerald-100 p-3 rounded-md">
-                            <p className="text-sm text-emerald-900">
+                        <div className="bg-[#E8F5E9] border border-[#C8E6C9] p-3 rounded-xl">
+                            <p className="text-sm text-[#212121]">
                                 <span className="font-medium">User:</span>{' '}
                                 {user.name}
                             </p>
-                            <p className="text-sm text-emerald-600">
+                            <p className="text-sm text-[#757575]">
                                 <span className="font-medium">Role:</span>{' '}
                                 {user.role === 'super_admin'
                                     ? 'ATARI Super Admin'
@@ -100,7 +100,7 @@ export const Dashboard: React.FC = () => {
                             </p>
                         </div>
                     )}
-                    <div className="flex gap-3 justify-end pt-4 border-t border-emerald-100">
+                    <div className="flex gap-3 justify-end pt-4 border-t border-[#E0E0E0]">
                         <Button
                             variant="outline"
                             onClick={() => setShowLogoutModal(false)}

@@ -126,7 +126,7 @@ export const AllMasters: React.FC = () => {
         <div className="h-full flex flex-col bg-[#FAF9F6]">
             {/* Header */}
             <div className="bg-white border-b border-[#E0E0E0] px-6 py-4">
-                <h1 className="text-2xl font-semibold text-emerald-700">All Masters</h1>
+                <h1 className="text-2xl font-semibold text-[#487749]">All Masters</h1>
                 <p className="text-sm text-[#757575] mt-1">
                     Manage all master data including zones, states, organizations, OFT, FLD, training, extension, production, and publications
                 </p>
@@ -147,8 +147,8 @@ export const AllMasters: React.FC = () => {
                                     border-b-2 border-transparent rounded-t-xl
                                     ${
                                         isActive
-                                            ? 'text-emerald-700 border-emerald-600 bg-emerald-50 border-l-2'
-                                            : 'text-[#757575] hover:text-emerald-700 hover:bg-[#F5F5F5]'
+                                            ? 'text-[#487749] border-[#487749] bg-[#E8F5E9] border-l-2'
+                                            : 'text-[#757575] hover:text-[#487749] hover:bg-[#F5F5F5]'
                                     }
                                 `}
                             >

@@ -9,7 +9,7 @@ interface KVKInfoTabProps {
 export const KVKInfoTab: React.FC<KVKInfoTabProps> = ({ kvk }) => {
     const renderField = (label: string, value: string | undefined | null) => (
         <div className="mb-4">
-            <label className="block text-sm font-medium text-emerald-700 mb-2">
+            <label className="block text-sm font-medium text-[#487749] mb-2">
                 {label}
             </label>
             <p className="text-[#212121] py-2">{value || '-'}</p>

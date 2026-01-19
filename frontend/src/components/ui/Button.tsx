@@ -18,11 +18,11 @@ export const Button: React.FC<ButtonProps> = ({
 
     const variants = {
         primary:
-            'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-600 focus:ring-emerald-500/30 shadow-sm hover:shadow-md',
+            'bg-[#487749] text-white hover:bg-[#3d6540] active:bg-[#487749] focus:ring-[#487749]/30 shadow-sm hover:shadow-md',
         secondary:
-            'bg-white text-emerald-700 border border-[#E0E0E0] hover:bg-[#F5F5F5] hover:border-[#BDBDBD] active:bg-[#FAFAFA] focus:ring-emerald-500/20',
+            'bg-white text-[#487749] border border-[#E0E0E0] hover:bg-[#F5F5F5] hover:border-[#BDBDBD] active:bg-[#FAFAFA] focus:ring-[#487749]/20',
         outline:
-            'bg-transparent text-emerald-700 border-2 border-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 focus:ring-emerald-500/30',
+            'bg-transparent text-[#487749] border-2 border-[#487749] hover:bg-[#E8F5E9] active:bg-[#C8E6C9] focus:ring-[#487749]/30',
     }
 
     const sizes = {

@@ -76,7 +76,7 @@ export const PerformanceTab: React.FC = () => {
     return (
         <div className="p-6">
             <div className="mb-6">
-                <h2 className="text-xl font-semibold text-emerald-900">Performance Indicators</h2>
+                <h2 className="text-xl font-semibold text-[#212121]">Performance Indicators</h2>
                 <p className="text-sm text-[#757575] mt-1">
                     Manage impact, district and village performance, infrastructure performance, financial performance, and linkages
                 </p>
@@ -86,14 +86,14 @@ export const PerformanceTab: React.FC = () => {
                 {sections.map((section, sectionIdx) => (
                     <div
                         key={sectionIdx}
-                        className="bg-white rounded-md shadow-sm border border-emerald-100 overflow-hidden"
+                        className="bg-white rounded-md shadow-sm border border-[#C8E6C9] overflow-hidden"
                     >
-                        <div className="bg-emerald-50 px-4 py-3 border-b border-emerald-100 border-l-2 border-emerald-500">
+                        <div className="bg-[#E8F5E9] px-4 py-3 border-b border-[#C8E6C9] border-l-2 border-[#E8F5E9]0">
                             <div className="flex items-center gap-2">
-                                <span className="text-emerald-700">
+                                <span className="text-[#487749]">
                                     {section.icon}
                                 </span>
-                                <h3 className="font-semibold text-emerald-700">
+                                <h3 className="font-semibold text-[#487749]">
                                     {section.title}
                                 </h3>
                             </div>
@@ -103,12 +103,12 @@ export const PerformanceTab: React.FC = () => {
                                 <Link
                                     key={itemIdx}
                                     to={item.path}
-                                    className="flex items-center justify-between p-2 rounded hover:bg-emerald-50 transition-colors group"
+                                    className="flex items-center justify-between p-2 rounded hover:bg-[#E8F5E9] transition-colors group"
                                 >
-                                    <span className="text-sm text-emerald-900 group-hover:text-emerald-700">
+                                    <span className="text-sm text-[#212121] group-hover:text-[#487749]">
                                         {item.label}
                                     </span>
-                                    <ArrowRight className="w-4 h-4 text-[#757575] group-hover:text-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <ArrowRight className="w-4 h-4 text-[#757575] group-hover:text-[#487749] opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </Link>
                             ))}
                         </div>

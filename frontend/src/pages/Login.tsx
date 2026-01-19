@@ -101,7 +101,7 @@ export const Login: React.FC = () => {
 
                     {/* Welcome Message */}
                     <div className="mb-8">
-                        <h2 className="text-3xl font-bold text-emerald-700 mb-2">
+                        <h2 className="text-3xl font-bold text-[#487749] mb-2">
                             Welcome Back!
                         </h2>
                         <p className="text-[#757575] text-sm">
@@ -135,7 +135,7 @@ export const Login: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="text-[#757575] hover:text-emerald-700 transition-colors focus:outline-none"
+                                        className="text-[#757575] hover:text-[#487749] transition-colors focus:outline-none"
                                         tabIndex={-1}
                                     >
                                         {showPassword ? (
@@ -195,7 +195,7 @@ export const Login: React.FC = () => {
 
                     {/* Quick Login (Demo) - Collapsible */}
                     <details className="mt-8 pt-6 border-t border-[#E0E0E0]">
-                        <summary className="text-xs text-[#757575] mb-3 cursor-pointer hover:text-emerald-700 transition-colors">
+                        <summary className="text-xs text-[#757575] mb-3 cursor-pointer hover:text-[#487749] transition-colors">
                             Quick Login (Demo)
                         </summary>
                         <div className="space-y-2 mt-3">

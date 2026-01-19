@@ -93,7 +93,7 @@ export const AllStaff: React.FC = () => {
             <Card>
                 <CardContent className="p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                        <h2 className="text-2xl font-bold text-emerald-700">
+                        <h2 className="text-2xl font-bold text-[#487749]">
                             All Staff Members
                         </h2>
                         <div className="flex gap-2 flex-wrap">
@@ -128,14 +128,14 @@ export const AllStaff: React.FC = () => {
                                 placeholder="Search by name, email, mobile, post..."
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                className="w-full h-12 pl-10 pr-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121]"
+                                className="w-full h-12 pl-10 pr-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121]"
                             />
                         </div>
                         <div>
                             <select
                                 value={jobTypeFilter}
                                 onChange={e => setJobTypeFilter(e.target.value)}
-                                className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121]"
+                                className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121]"
                             >
                                 <option value="">All Job Types</option>
                                 {jobTypes.map(type => (
@@ -149,7 +149,7 @@ export const AllStaff: React.FC = () => {
                             <select
                                 value={transferFilter}
                                 onChange={e => setTransferFilter(e.target.value)}
-                                className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121]"
+                                className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121]"
                             >
                                 <option value="">All Status</option>
                                 <option value="active">Active</option>
@@ -166,29 +166,29 @@ export const AllStaff: React.FC = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr className="bg-emerald-50 border-b border-[#E0E0E0]">
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <tr className="bg-[#E8F5E9] border-b border-[#E0E0E0]">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             KVK Name
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Staff Name
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Post
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Mobile
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Email
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Discipline
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Job Type
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Status
                                         </th>
                                     </tr>
@@ -226,7 +226,7 @@ export const AllStaff: React.FC = () => {
                                                         Transferred
                                                     </span>
                                                 ) : (
-                                                    <span className="px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-xl">
+                                                    <span className="px-2 py-1 text-xs font-medium bg-[#E8F5E9] text-[#487749] rounded-xl">
                                                         Active
                                                     </span>
                                                 )}

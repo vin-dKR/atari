@@ -48,7 +48,7 @@ export const KVKDetailView: React.FC = () => {
                             Back to List
                         </Button>
                         <div>
-                            <h2 className="text-2xl font-bold text-emerald-700">
+                            <h2 className="text-2xl font-bold text-[#487749]">
                                 {kvk.kvk_name}
                             </h2>
                             <p className="text-[#757575] mt-1">
@@ -63,8 +63,8 @@ export const KVKDetailView: React.FC = () => {
                             onClick={() => setActiveTab('info')}
                             className={`px-4 py-2 font-medium transition-colors border-b-2 ${
                                 activeTab === 'info'
-                                    ? 'border-emerald-600 text-emerald-700'
-                                    : 'border-transparent text-[#757575] hover:text-emerald-700'
+                                    ? 'border-[#487749] text-[#487749]'
+                                    : 'border-transparent text-[#757575] hover:text-[#487749]'
                             }`}
                         >
                             <div className="flex items-center gap-2">
@@ -76,8 +76,8 @@ export const KVKDetailView: React.FC = () => {
                             onClick={() => setActiveTab('bank')}
                             className={`px-4 py-2 font-medium transition-colors border-b-2 ${
                                 activeTab === 'bank'
-                                    ? 'border-emerald-600 text-emerald-700'
-                                    : 'border-transparent text-[#757575] hover:text-emerald-700'
+                                    ? 'border-[#487749] text-[#487749]'
+                                    : 'border-transparent text-[#757575] hover:text-[#487749]'
                             }`}
                         >
                             <div className="flex items-center gap-2">
@@ -89,8 +89,8 @@ export const KVKDetailView: React.FC = () => {
                             onClick={() => setActiveTab('employees')}
                             className={`px-4 py-2 font-medium transition-colors border-b-2 ${
                                 activeTab === 'employees'
-                                    ? 'border-emerald-600 text-emerald-700'
-                                    : 'border-transparent text-[#757575] hover:text-emerald-700'
+                                    ? 'border-[#487749] text-[#487749]'
+                                    : 'border-transparent text-[#757575] hover:text-[#487749]'
                             }`}
                         >
                             <div className="flex items-center gap-2">

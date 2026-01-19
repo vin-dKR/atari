@@ -39,15 +39,15 @@ export const Modal: React.FC<ModalProps> = ({
                 {/* Header */}
                 {title && (
                     <div className="flex items-center justify-between px-6 py-4 border-b border-[#E0E0E0]">
-                        <h2 className="text-xl font-semibold text-emerald-700">
+                        <h2 className="text-xl font-semibold text-[#487749]">
                             {title}
                         </h2>
                         <button
                             onClick={onClose}
-                            className="p-2 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                            className="p-2 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#487749]/20"
                             aria-label="Close"
                         >
-                            <X className="w-5 h-5 text-[#757575] hover:text-emerald-700" />
+                            <X className="w-5 h-5 text-[#757575] hover:text-[#487749]" />
                         </button>
                     </div>
                 )}

@@ -112,7 +112,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
     // Determine which menu items to show based on user role
     const menuItems = user?.role === 'super_admin' ? superAdminMenuItems : regularMenuItems
-    const isSuperAdmin = user?.role === 'super_admin'
 
     // Debounce search query
     useEffect(() => {
@@ -190,11 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         return (
             <>
                 {text.substring(0, index)}
-                <mark className={`${
-                    isSuperAdmin
-                        ? 'bg-emerald-500/30 text-white'
-                        : 'bg-emerald-200 text-emerald-900'
-                } px-0.5 rounded`}>
+                <mark className="bg-white/30 text-white px-0.5 rounded">
                     {text.substring(index, index + query.length)}
                 </mark>
                 {text.substring(index + query.length)}
@@ -299,23 +294,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         })
         const isItemActive = active || hasActiveChild
 
-        // Styling for super admin (dark green theme) and regular users - Modern style
+        // Unified green theme styling for all roles
         const getItemStyles = () => {
-            if (isSuperAdmin && level === 0) {
-                // Top level items in super admin sidebar
+            if (level === 0) {
+                // Top level items
                 return isItemActive
-                    ? 'bg-emerald-900 text-white border border-emerald-800 shadow-sm'
-                    : 'text-emerald-200 hover:bg-emerald-900/50 hover:text-white'
-            } else if (isSuperAdmin && level > 0) {
-                // Nested items in super admin sidebar
-                return isItemActive
-                    ? 'bg-emerald-900/50 text-white'
-                    : 'text-emerald-300 hover:bg-emerald-900/50 hover:text-white'
+                    ? 'bg-[#3d6540] text-white border border-[#2d4d30] shadow-sm'
+                    : 'text-white/80 hover:bg-[#3d6540]/50 hover:text-white'
             } else {
-                // Regular styling for other roles
+                // Nested items
                 return isItemActive
-                    ? 'bg-emerald-100 text-emerald-900 font-medium border-l-2 border-emerald-600'
-                    : 'text-emerald-700 hover:bg-emerald-50'
+                    ? 'bg-[#3d6540]/50 text-white'
+                    : 'text-white/70 hover:bg-[#3d6540]/50 hover:text-white'
             }
         }
 
@@ -457,7 +447,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-md border border-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-200"
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-md border border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#487749] transition-all duration-200"
                 aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="main-sidebar"
@@ -480,11 +470,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             {/* Sidebar */}
             <aside
                 id="main-sidebar"
-                className={`fixed top-0 left-0 h-screen ${
-                    isSuperAdmin ? 'bg-emerald-950' : 'bg-emerald-50/30'
-                } border-r ${
-                    isSuperAdmin ? 'border-emerald-900' : 'border-emerald-100'
-                } z-40 transition-all duration-300 ${
+                className={`fixed top-0 left-0 h-screen bg-[#487749] border-r border-[#3d6540] z-40 transition-all duration-300 ${
                     isOpen ? 'w-64' : 'w-16'
                 } ${
                     isMobileMenuOpen
@@ -497,24 +483,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             >
                 <div className="flex flex-col h-screen">
                     {/* Header */}
-                    <div className={`flex items-center justify-between px-4 h-16 border-b ${
-                        isSuperAdmin ? 'border-emerald-900' : 'border-emerald-100'
-                    }`}>
+                    <div className="flex items-center justify-between px-4 h-16 border-b border-[#3d6540]">
                             {isOpen && (
-                            <h2 className={`text-lg font-semibold ${
-                                isSuperAdmin ? 'text-white' : 'text-emerald-700'
-                            }`}>
+                            <h2 className="text-lg font-semibold text-white">
                                 ATARI Zone IV
                             </h2>
                         )}
                         <button
                             onClick={onToggle}
                             onMouseDown={(e) => e.preventDefault()}
-                            className={`hidden lg:flex p-1.5 rounded-xl transition-all duration-200 outline-none focus:outline-none active:outline-none ${
-                                isSuperAdmin
-                                    ? 'hover:bg-emerald-900 text-emerald-200'
-                                    : 'hover:bg-emerald-50 text-emerald-600'
-                            }`}
+                            className="hidden lg:flex p-1.5 rounded-xl transition-all duration-200 outline-none focus:outline-none active:outline-none hover:bg-[#3d6540] text-white/80"
                             aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
                             aria-expanded={isOpen}
                         >
@@ -528,24 +506,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
                     {/* Search Menu - Enhanced with icon and keyboard shortcut hint */}
                     {isOpen && (
-                        <div className={`p-3 border-b ${
-                            isSuperAdmin ? 'border-emerald-900' : 'border-emerald-100'
-                        }`}>
+                        <div className="p-3 border-b border-[#3d6540]">
                             <div className="relative">
-                                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-                                    isSuperAdmin ? 'text-emerald-400' : 'text-emerald-500'
-                                }`} />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/60" />
                                 <input
                                     ref={searchInputRef}
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search menu... (Ctrl+K)"
-                                    className={`w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border transition-all duration-200 ${
-                                        isSuperAdmin
-                                            ? 'bg-emerald-900 border-emerald-800 text-white placeholder-emerald-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'
-                                            : 'bg-emerald-50 border-emerald-200 text-emerald-900 placeholder-emerald-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'
-                                    } focus:outline-none`}
+                                    className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border transition-all duration-200 bg-[#3d6540] border-[#2d4d30] text-white placeholder-white/50 focus:ring-2 focus:ring-white/30 focus:border-white/30 focus:outline-none"
                                     aria-label="Search menu items"
                                     aria-describedby="search-help-text"
                                     role="searchbox"
@@ -571,11 +541,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                                             setSearchQuery('')
                                             searchInputRef.current?.focus()
                                         }}
-                                        className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-xl ${
-                                            isSuperAdmin
-                                                ? 'hover:bg-emerald-800 text-emerald-300'
-                                                : 'hover:bg-emerald-100 text-emerald-500'
-                                        } transition-all duration-200`}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-xl hover:bg-[#2d4d30] text-white/70 transition-all duration-200"
                                         aria-label="Clear search"
                                     >
                                         <X className="w-4 h-4" />
@@ -585,10 +551,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                         </div>
                     )}
 
-                    {/* MENU Label - Only for Super Admin */}
-                    {isSuperAdmin && isOpen && (
+                    {/* MENU Label */}
+                    {isOpen && (
                         <div className="px-3 pt-3 pb-2">
-                            <span className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">Navigation</span>
+                            <span className="text-white/60 text-xs font-semibold uppercase tracking-wider">Navigation</span>
                         </div>
                     )}
 
@@ -601,9 +567,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                                 </div>
                             ))
                         ) : (
-                                <div className={`px-4 py-8 text-center ${
-                                isSuperAdmin ? 'text-emerald-400' : 'text-emerald-500'
-                            }`}>
+                                <div className="px-4 py-8 text-center text-white/60">
                                 <p className="text-sm">No menu items found</p>
                                 <p className="text-xs mt-1">Try a different search term</p>
                             </div>
@@ -612,15 +576,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
                     {/* Logout Button - Always visible at bottom */}
                         {user && (
-                        <div className={`p-3 border-t ${
-                            isSuperAdmin ? 'border-emerald-900' : 'border-emerald-100'
-                        }`}>
+                        <div className="p-3 border-t border-[#3d6540]">
                                 {isOpen && user && (
-                                <div className={`mb-3 px-1 text-xs ${
-                                    isSuperAdmin ? 'text-emerald-300' : 'text-emerald-600'
-                                }`}>
-                                    <p className={`font-medium ${isSuperAdmin ? 'text-white' : 'text-emerald-700'}`}>{user.name}</p>
-                                    <p className={isSuperAdmin ? 'text-emerald-300' : 'text-emerald-600'}>
+                                <div className="mb-3 px-1 text-xs text-white/70">
+                                    <p className="font-medium text-white">{user.name}</p>
+                                    <p className="text-white/70">
                                         {user.role === 'super_admin'
                                             ? 'ATARI Super Admin'
                                             : user.role === 'admin'
@@ -632,11 +592,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                             <button
                                 onClick={handleLogout}
                                 onMouseDown={(e) => e.preventDefault()}
-                                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-all duration-200 outline-none focus:outline-none active:outline-none ${
-                                    isSuperAdmin
-                                        ? 'text-emerald-200 bg-emerald-900 border-emerald-800 hover:bg-emerald-800'
-                                        : 'text-emerald-700 bg-white border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300'
-                                }`}
+                                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-all duration-200 outline-none focus:outline-none active:outline-none text-white bg-[#3d6540] border-[#2d4d30] hover:bg-[#2d4d30]"
                                 aria-label="Logout"
                             >
                                 <LogOut className="w-4 h-4 shrink-0" />

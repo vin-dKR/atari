@@ -18,7 +18,7 @@ export const MetricsCards: React.FC = () => {
             label: 'Total KVKs',
             value: filteredData.totalKVKs,
             icon: <Building2 className="w-6 h-6" />,
-            color: 'bg-emerald-600',
+            color: 'bg-[#487749]',
         },
         {
             label: 'Staff Count',

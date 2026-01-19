@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
             <div className="flex items-center justify-between px-4 lg:px-6 h-16">
                 {/* Left side - Mobile menu button and title */}
                 <div className="flex items-center gap-4">
-                    <h1 className="text-lg font-semibold text-emerald-700 hidden lg:block">
+                    <h1 className="text-lg font-semibold text-[#487749] hidden lg:block">
                         AMS - ATARI Zone (IV) Patna
                     </h1>
                 </div>
@@ -42,10 +42,10 @@ export const Header: React.FC = () => {
                 <div className="flex items-center gap-3">
                     {/* Notifications */}
                     <button
-                        className="relative p-2 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                        className="relative p-2 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#487749]/20"
                         aria-label="Notifications"
                     >
-                        <Bell className="w-5 h-5 text-emerald-700" />
+                        <Bell className="w-5 h-5 text-[#487749]" />
                         <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                     </button>
 
@@ -53,9 +53,9 @@ export const Header: React.FC = () => {
                     <div className="relative">
                         <button
                             onClick={() => setUserMenuOpen(!userMenuOpen)}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#487749]/20"
                         >
-                            <div className="w-8 h-8 bg-emerald-600 rounded-xl flex items-center justify-center">
+                            <div className="w-8 h-8 bg-[#487749] rounded-xl flex items-center justify-center">
                                 <User className="w-4 h-4 text-white" />
                             </div>
                             <div className="hidden md:block text-left">
@@ -84,14 +84,14 @@ export const Header: React.FC = () => {
                                         <p className="text-xs text-[#757575]">
                                             {user.email}
                                         </p>
-                                        <p className="text-xs text-emerald-700 mt-1 font-medium">
+                                        <p className="text-xs text-[#487749] mt-1 font-medium">
                                             {getRoleDisplayName(user.role)}
                                         </p>
                                     </div>
                                     <div className="p-2">
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-emerald-700 rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0]"
+                                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#487749] rounded-xl hover:bg-[#F5F5F5] transition-all duration-200 border border-transparent hover:border-[#E0E0E0]"
                                         >
                                             <LogOut className="w-4 h-4" />
                                             Logout

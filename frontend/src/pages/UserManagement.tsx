@@ -4,7 +4,7 @@ export const UserManagement: React.FC = () => {
     return (
         <div>
             <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-emerald-700">User Management</h1>
+                <h1 className="text-2xl font-semibold text-[#487749]">User Management</h1>
                 <p className="text-sm text-[#757575] mt-1">
                     Manage system users and their access
                 </p>

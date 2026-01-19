@@ -90,7 +90,7 @@ export const KVKListView: React.FC = () => {
             <Card>
                 <CardContent className="p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                        <h2 className="text-2xl font-bold text-emerald-700">
+                        <h2 className="text-2xl font-bold text-[#487749]">
                             KVK List
                         </h2>
                         <div className="flex gap-2 flex-wrap">
@@ -125,7 +125,7 @@ export const KVKListView: React.FC = () => {
                                 placeholder="Search by KVK name, email, mobile, state, district..."
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                className="w-full h-12 pl-10 pr-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121]"
+                                className="w-full h-12 pl-10 pr-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121]"
                             />
                         </div>
                     </div>
@@ -138,26 +138,26 @@ export const KVKListView: React.FC = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr className="bg-emerald-50 border-b border-[#E0E0E0]">
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <tr className="bg-[#E8F5E9] border-b border-[#E0E0E0]">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             KVK Name
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             State
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             District
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             University
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Mobile
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Email
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Actions
                                         </th>
                                     </tr>
@@ -191,7 +191,7 @@ export const KVKListView: React.FC = () => {
                                                     <div className="flex gap-2">
                                                         <button
                                                             onClick={() => navigate(`/forms/about-kvk/view-kvks/${kvk.id}`)}
-                                                            className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
+                                                            className="p-2 text-[#487749] hover:bg-[#E8F5E9] rounded-xl transition-colors"
                                                             title="View Details"
                                                         >
                                                             <Eye className="w-4 h-4" />
@@ -211,7 +211,7 @@ export const KVKListView: React.FC = () => {
                                                     <div className="flex gap-2">
                                                         <button
                                                             onClick={() => navigate(`/forms/about-kvk/details`)}
-                                                            className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
+                                                            className="p-2 text-[#487749] hover:bg-[#E8F5E9] rounded-xl transition-colors"
                                                             title="View Details"
                                                         >
                                                             <Eye className="w-4 h-4" />

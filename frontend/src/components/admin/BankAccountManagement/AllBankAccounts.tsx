@@ -85,7 +85,7 @@ export const AllBankAccounts: React.FC = () => {
             <Card>
                 <CardContent className="p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                        <h2 className="text-2xl font-bold text-emerald-700">
+                        <h2 className="text-2xl font-bold text-[#487749]">
                             All Bank Accounts
                         </h2>
                         <div className="flex gap-2 flex-wrap">
@@ -120,14 +120,14 @@ export const AllBankAccounts: React.FC = () => {
                                 placeholder="Search by KVK name, bank name, account number..."
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                className="w-full h-12 pl-10 pr-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121]"
+                                className="w-full h-12 pl-10 pr-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121]"
                             />
                         </div>
                         <div>
                             <select
                                 value={accountTypeFilter}
                                 onChange={e => setAccountTypeFilter(e.target.value)}
-                                className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121]"
+                                className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121]"
                             >
                                 <option value="">All Account Types</option>
                                 {accountTypes.map(type => (
@@ -147,23 +147,23 @@ export const AllBankAccounts: React.FC = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr className="bg-emerald-50 border-b border-[#E0E0E0]">
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                    <tr className="bg-[#E8F5E9] border-b border-[#E0E0E0]">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             KVK Name
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Account Type
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Account Name
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Bank Name
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Location
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-700">
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Account Number
                                         </th>
                                     </tr>

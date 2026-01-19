@@ -113,7 +113,7 @@ export const ViewOrganizations: React.FC = () => {
             {/* Header with Actions */}
             <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 className="text-xl font-semibold text-emerald-700">Organization Master</h2>
+                    <h2 className="text-xl font-semibold text-[#487749]">Organization Master</h2>
                     <p className="text-sm text-[#757575] mt-1">
                         Manage and view all organizations in the system
                     </p>
@@ -121,14 +121,14 @@ export const ViewOrganizations: React.FC = () => {
                 <div className="flex gap-2">
                     <button
                         onClick={handleExport}
-                        className="flex items-center gap-2 px-4 py-2 border border-[#E0E0E0] rounded-xl text-sm font-medium text-emerald-700 hover:bg-[#F5F5F5] hover:border-[#BDBDBD] transition-all duration-200"
+                        className="flex items-center gap-2 px-4 py-2 border border-[#E0E0E0] rounded-xl text-sm font-medium text-[#487749] hover:bg-[#F5F5F5] hover:border-[#BDBDBD] transition-all duration-200"
                     >
                         <Download className="w-4 h-4" />
                         Export
                     </button>
                     <button
                         onClick={handleAddNew}
-                        className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-700 border border-emerald-600 hover:border-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#487749] text-white rounded-xl text-sm font-medium hover:bg-[#487749] border border-[#487749] hover:border-[#487749] transition-all duration-200 shadow-sm hover:shadow-md"
                     >
                         <Plus className="w-4 h-4" />
                         Add New Organization
@@ -145,7 +145,7 @@ export const ViewOrganizations: React.FC = () => {
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         placeholder="Search organizations by state or university..."
-                        className="w-full pl-10 pr-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] placeholder-[#9E9E9E] transition-all duration-200 hover:border-[#BDBDBD]"
+                        className="w-full pl-10 pr-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 focus:border-[#487749] bg-white text-[#212121] placeholder-[#9E9E9E] transition-all duration-200 hover:border-[#BDBDBD]"
                     />
                 </div>
             </div>
@@ -186,7 +186,7 @@ export const ViewOrganizations: React.FC = () => {
                                                     type="text"
                                                     value={editValues.stateName}
                                                     onChange={e => setEditValues({ ...editValues, stateName: e.target.value })}
-                                                    className="px-3 py-1.5 border border-emerald-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 w-full max-w-xs transition-all duration-200"
+                                                    className="px-3 py-1.5 border border-[#487749] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 w-full max-w-xs transition-all duration-200"
                                                 />
                                             ) : (
                                                 <span className="font-medium">{org.stateName}</span>
@@ -198,7 +198,7 @@ export const ViewOrganizations: React.FC = () => {
                                                     type="text"
                                                     value={editValues.universityName}
                                                     onChange={e => setEditValues({ ...editValues, universityName: e.target.value })}
-                                                    className="px-3 py-1.5 border border-emerald-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 w-full max-w-md transition-all duration-200"
+                                                    className="px-3 py-1.5 border border-[#487749] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E8F5E9]0/20 w-full max-w-md transition-all duration-200"
                                                     onKeyDown={e => {
                                                         if (e.key === 'Enter') handleSave(org.id)
                                                         if (e.key === 'Escape') handleCancel()
@@ -213,7 +213,7 @@ export const ViewOrganizations: React.FC = () => {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => handleSave(org.id)}
-                                                        className="p-1.5 text-emerald-700 hover:bg-[#F5F5F5] rounded-xl border border-transparent hover:border-[#E0E0E0] transition-all duration-200"
+                                                        className="p-1.5 text-[#487749] hover:bg-[#F5F5F5] rounded-xl border border-transparent hover:border-[#E0E0E0] transition-all duration-200"
                                                         aria-label="Save"
                                                     >
                                                         <Save className="w-4 h-4" />
@@ -230,7 +230,7 @@ export const ViewOrganizations: React.FC = () => {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => handleEdit(org)}
-                                                        className="p-1.5 text-emerald-700 hover:bg-[#F5F5F5] rounded-xl border border-transparent hover:border-[#E0E0E0] transition-all duration-200"
+                                                        className="p-1.5 text-[#487749] hover:bg-[#F5F5F5] rounded-xl border border-transparent hover:border-[#E0E0E0] transition-all duration-200"
                                                         aria-label="Edit"
                                                     >
                                                         <Edit2 className="w-4 h-4" />
@@ -260,7 +260,7 @@ export const ViewOrganizations: React.FC = () => {
                                             {debouncedSearch && (
                                                 <button
                                                     onClick={() => setSearchQuery('')}
-                                                    className="text-sm text-emerald-700 hover:text-emerald-800 hover:underline transition-colors"
+                                                    className="text-sm text-[#487749] hover:text-[#3d6540] hover:underline transition-colors"
                                                 >
                                                     Clear search
                                                 </button>
@@ -286,7 +286,7 @@ export const ViewOrganizations: React.FC = () => {
                         <button
                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                             disabled={currentPage === 1}
-                            className="px-4 py-2 border border-[#E0E0E0] rounded-xl text-sm font-medium text-emerald-700 hover:bg-[#F5F5F5] hover:border-[#BDBDBD] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            className="px-4 py-2 border border-[#E0E0E0] rounded-xl text-sm font-medium text-[#487749] hover:bg-[#F5F5F5] hover:border-[#BDBDBD] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                         >
                             Previous
                         </button>
@@ -309,8 +309,8 @@ export const ViewOrganizations: React.FC = () => {
                                         onClick={() => setCurrentPage(page)}
                                         className={`px-3 py-2 min-w-[2.5rem] border rounded-xl text-sm font-medium transition-all duration-200 ${
                                             currentPage === page
-                                                ? 'bg-emerald-600 text-white border-emerald-600'
-                                                : 'border-[#E0E0E0] text-emerald-700 hover:bg-[#F5F5F5] hover:border-[#BDBDBD]'
+                                                ? 'bg-[#487749] text-white border-[#487749]'
+                                                : 'border-[#E0E0E0] text-[#487749] hover:bg-[#F5F5F5] hover:border-[#BDBDBD]'
                                         }`}
                                     >
                                         {page}
@@ -323,7 +323,7 @@ export const ViewOrganizations: React.FC = () => {
                                 setCurrentPage(prev => Math.min(totalPages, prev + 1))
                             }
                             disabled={currentPage === totalPages}
-                            className="px-4 py-2 border border-[#E0E0E0] rounded-xl text-sm font-medium text-emerald-700 hover:bg-[#F5F5F5] hover:border-[#BDBDBD] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            className="px-4 py-2 border border-[#E0E0E0] rounded-xl text-sm font-medium text-[#487749] hover:bg-[#F5F5F5] hover:border-[#BDBDBD] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                         >
                             Next
                         </button>

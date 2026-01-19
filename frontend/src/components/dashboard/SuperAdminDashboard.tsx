@@ -8,51 +8,158 @@ import {
     Tag,
 } from 'lucide-react'
 
-// Mock data for Super Admin
-const mockKPIData = {
-    organization: 9,
-    kvk: 66,
-    totalOFT: 462,
-    totalFLD: 788,
-    training: 7284,
-    totalStaff: 636,
+// Mock data for Super Admin - Year-wise data
+const mockDataByYear: Record<string, {
+    kpiData: { organization: number; kvk: number; totalOFT: number; totalFLD: number; training: number; totalStaff: number };
+    oftData: { kvk: string; completed: number; total: number; status: string }[];
+    fldData: { kvk: string; completed: number; total: number; status: string }[];
+    trainingData: { kvk: string; count: number; status: string }[];
+    extensionActivity: { kvk: string; count: number; status: string }[];
+}> = {
+    'All': {
+        kpiData: { organization: 9, kvk: 66, totalOFT: 462, totalFLD: 788, training: 7284, totalStaff: 636 },
+        oftData: [
+            { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
+            { kvk: 'KVK Arwal', completed: 5, total: 1, status: 'over' },
+            { kvk: 'KVK Aurangabad', completed: 0, total: 7, status: 'pending' },
+            { kvk: 'KVK Banka', completed: 4, total: 3, status: 'over' },
+        ],
+        fldData: [
+            { kvk: 'KVK Araria', completed: 5, total: 8, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 19, total: 23, status: 'in-progress' },
+            { kvk: 'KVK Aurangabad', completed: 0, total: 5, status: 'pending' },
+            { kvk: 'KVK Banka', completed: 5, total: 9, status: 'in-progress' },
+        ],
+        trainingData: [
+            { kvk: 'KVK Araria', count: 140, status: 'active' },
+            { kvk: 'KVK Arwal', count: 89, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 45, status: 'active' },
+            { kvk: 'KVK Banka', count: 120, status: 'active' },
+        ],
+        extensionActivity: [
+            { kvk: 'KVK Araria', count: 45, status: 'active' },
+            { kvk: 'KVK Arwal', count: 114, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 67, status: 'active' },
+            { kvk: 'KVK Banka', count: 89, status: 'active' },
+        ],
+    },
+    '2023': {
+        kpiData: { organization: 8, kvk: 58, totalOFT: 320, totalFLD: 540, training: 5120, totalStaff: 580 },
+        oftData: [
+            { kvk: 'KVK Araria', completed: 1, total: 2, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 3, total: 3, status: 'complete' },
+            { kvk: 'KVK Aurangabad', completed: 2, total: 5, status: 'in-progress' },
+            { kvk: 'KVK Banka', completed: 2, total: 4, status: 'in-progress' },
+        ],
+        fldData: [
+            { kvk: 'KVK Araria', completed: 4, total: 5, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 12, total: 15, status: 'in-progress' },
+            { kvk: 'KVK Aurangabad', completed: 3, total: 8, status: 'in-progress' },
+            { kvk: 'KVK Banka', completed: 6, total: 6, status: 'complete' },
+        ],
+        trainingData: [
+            { kvk: 'KVK Araria', count: 98, status: 'active' },
+            { kvk: 'KVK Arwal', count: 67, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 32, status: 'active' },
+            { kvk: 'KVK Banka', count: 85, status: 'active' },
+        ],
+        extensionActivity: [
+            { kvk: 'KVK Araria', count: 32, status: 'active' },
+            { kvk: 'KVK Arwal', count: 78, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 45, status: 'active' },
+            { kvk: 'KVK Banka', count: 56, status: 'active' },
+        ],
+    },
+    '2024': {
+        kpiData: { organization: 9, kvk: 62, totalOFT: 398, totalFLD: 650, training: 6450, totalStaff: 610 },
+        oftData: [
+            { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
+            { kvk: 'KVK Arwal', completed: 4, total: 2, status: 'over' },
+            { kvk: 'KVK Aurangabad', completed: 3, total: 6, status: 'in-progress' },
+            { kvk: 'KVK Banka', completed: 3, total: 3, status: 'complete' },
+        ],
+        fldData: [
+            { kvk: 'KVK Araria', completed: 4, total: 6, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 15, total: 18, status: 'in-progress' },
+            { kvk: 'KVK Aurangabad', completed: 4, total: 7, status: 'in-progress' },
+            { kvk: 'KVK Banka', completed: 7, total: 8, status: 'in-progress' },
+        ],
+        trainingData: [
+            { kvk: 'KVK Araria', count: 125, status: 'active' },
+            { kvk: 'KVK Arwal', count: 78, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 38, status: 'active' },
+            { kvk: 'KVK Banka', count: 105, status: 'active' },
+        ],
+        extensionActivity: [
+            { kvk: 'KVK Araria', count: 38, status: 'active' },
+            { kvk: 'KVK Arwal', count: 95, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 52, status: 'active' },
+            { kvk: 'KVK Banka', count: 72, status: 'active' },
+        ],
+    },
+    '2025': {
+        kpiData: { organization: 9, kvk: 66, totalOFT: 462, totalFLD: 788, training: 7284, totalStaff: 636 },
+        oftData: [
+            { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
+            { kvk: 'KVK Arwal', completed: 5, total: 1, status: 'over' },
+            { kvk: 'KVK Aurangabad', completed: 0, total: 7, status: 'pending' },
+            { kvk: 'KVK Banka', completed: 4, total: 3, status: 'over' },
+        ],
+        fldData: [
+            { kvk: 'KVK Araria', completed: 6, total: 10, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 19, total: 23, status: 'in-progress' },
+            { kvk: 'KVK Aurangabad', completed: 0, total: 5, status: 'pending' },
+            { kvk: 'KVK Banka', completed: 5, total: 9, status: 'in-progress' },
+        ],
+        trainingData: [
+            { kvk: 'KVK Araria', count: 140, status: 'active' },
+            { kvk: 'KVK Arwal', count: 89, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 45, status: 'active' },
+            { kvk: 'KVK Banka', count: 120, status: 'active' },
+        ],
+        extensionActivity: [
+            { kvk: 'KVK Araria', count: 45, status: 'active' },
+            { kvk: 'KVK Arwal', count: 114, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 67, status: 'active' },
+            { kvk: 'KVK Banka', count: 89, status: 'active' },
+        ],
+    },
+    '2026': {
+        kpiData: { organization: 9, kvk: 68, totalOFT: 185, totalFLD: 290, training: 2850, totalStaff: 645 },
+        oftData: [
+            { kvk: 'KVK Araria', completed: 1, total: 3, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 2, total: 2, status: 'complete' },
+            { kvk: 'KVK Aurangabad', completed: 0, total: 4, status: 'pending' },
+            { kvk: 'KVK Banka', completed: 1, total: 2, status: 'in-progress' },
+        ],
+        fldData: [
+            { kvk: 'KVK Araria', completed: 2, total: 4, status: 'in-progress' },
+            { kvk: 'KVK Arwal', completed: 5, total: 8, status: 'in-progress' },
+            { kvk: 'KVK Aurangabad', completed: 0, total: 3, status: 'pending' },
+            { kvk: 'KVK Banka', completed: 2, total: 5, status: 'in-progress' },
+        ],
+        trainingData: [
+            { kvk: 'KVK Araria', count: 52, status: 'active' },
+            { kvk: 'KVK Arwal', count: 35, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 18, status: 'active' },
+            { kvk: 'KVK Banka', count: 48, status: 'active' },
+        ],
+        extensionActivity: [
+            { kvk: 'KVK Araria', count: 18, status: 'active' },
+            { kvk: 'KVK Arwal', count: 42, status: 'active' },
+            { kvk: 'KVK Aurangabad', count: 25, status: 'active' },
+            { kvk: 'KVK Banka', count: 32, status: 'active' },
+        ],
+    },
 }
-
-const mockOFTData = [
-    { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
-    { kvk: 'KVK Arwal', completed: 5, total: 1, status: 'over' },
-    { kvk: 'KVK Aurangabad', completed: 0, total: 7, status: 'pending' },
-    { kvk: 'KVK Banka', completed: 4, total: 3, status: 'over' },
-]
-
-const mockTrainingData = [
-    { kvk: 'KVK Araria', count: 140, status: 'active' },
-    { kvk: 'KVK Arwal', count: 89, status: 'active' },
-    { kvk: 'KVK Aurangabad', count: 45, status: 'active' },
-    { kvk: 'KVK Banka', count: 120, status: 'active' },
-]
-
-const mockFLDData = [
-    { kvk: 'KVK Araria', completed: 7, total: 3, status: 'over' },
-    { kvk: 'KVK Arwal', completed: 19, total: 23, status: 'in-progress' },
-    { kvk: 'KVK Aurangabad', completed: 0, total: 5, status: 'pending' },
-    { kvk: 'KVK Banka', completed: 5, total: 9, status: 'in-progress' },
-]
-
-const mockExtensionActivity = [
-    { kvk: 'KVK Araria', count: 45, status: 'active' },
-    { kvk: 'KVK Arwal', count: 114, status: 'active' },
-    { kvk: 'KVK Aurangabad', count: 67, status: 'active' },
-    { kvk: 'KVK Banka', count: 89, status: 'active' },
-]
 
 const getProgressColor = (status: string) => {
     switch (status) {
         case 'complete':
         case 'active':
-            return 'bg-emerald-500'
+            return 'bg-[#487749]'
         case 'in-progress':
-            return 'bg-emerald-600'
+            return 'bg-[#5c9a5e]'
         case 'over':
             return 'bg-amber-500'
         case 'pending':
@@ -66,9 +173,9 @@ const getBadgeColor = (status: string) => {
     switch (status) {
         case 'complete':
         case 'active':
-            return 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+            return 'bg-[#E8F5E9] text-[#487749] border border-[#C8E6C9]'
         case 'in-progress':
-            return 'bg-[#F1F8E9] text-emerald-700 border border-[#DCEDC8]'
+            return 'bg-[#F1F8E9] text-[#487749] border border-[#DCEDC8]'
         case 'over':
             return 'bg-[#FFF3E0] text-[#F57C00] border border-[#FFE0B2]'
         case 'pending':
@@ -82,48 +189,66 @@ export const SuperAdminDashboard: React.FC = () => {
     const [selectedYear, setSelectedYear] = useState('All')
     const [selectedKVK, setSelectedKVK] = useState('All')
 
+    // Get data based on selected year
+    const currentData = mockDataByYear[selectedYear] || mockDataByYear['All']
+    const { kpiData, oftData, fldData, trainingData, extensionActivity } = currentData
+
+    // Filter by KVK if selected
+    const filteredOFTData = selectedKVK === 'All'
+        ? oftData
+        : oftData.filter(item => item.kvk === selectedKVK)
+    const filteredFLDData = selectedKVK === 'All'
+        ? fldData
+        : fldData.filter(item => item.kvk === selectedKVK)
+    const filteredTrainingData = selectedKVK === 'All'
+        ? trainingData
+        : trainingData.filter(item => item.kvk === selectedKVK)
+    const filteredExtensionData = selectedKVK === 'All'
+        ? extensionActivity
+        : extensionActivity.filter(item => item.kvk === selectedKVK)
+
     const kpiCards = [
         {
             label: 'Organization',
-            value: mockKPIData.organization,
+            value: kpiData.organization,
             icon: <FileText className="w-6 h-6" />,
-            bgColor: 'bg-emerald-50',
-            iconColor: 'text-emerald-700',
+            bgColor: 'bg-[#E8F5E9]',
+            iconColor: 'text-[#487749]',
         },
         {
             label: 'KVK',
-            value: mockKPIData.kvk,
+            value: kpiData.kvk,
             icon: <BarChart3 className="w-6 h-6" />,
-            bgColor: 'bg-emerald-50',
-            iconColor: 'text-emerald-700',
+            bgColor: 'bg-[#E8F5E9]',
+            iconColor: 'text-[#487749]',
         },
         {
             label: 'Total OFT',
-            value: mockKPIData.totalOFT,
+            value: kpiData.totalOFT,
             icon: <Users className="w-6 h-6" />,
-            bgColor: 'bg-emerald-50',
-            iconColor: 'text-emerald-700',
+            bgColor: 'bg-[#E8F5E9]',
+            iconColor: 'text-[#487749]',
         },
         {
             label: 'Total FLD',
-            value: mockKPIData.totalFLD,
+            value: kpiData.totalFLD,
             icon: <FileText className="w-6 h-6" />,
-            bgColor: 'bg-emerald-50',
-            iconColor: 'text-emerald-700',
+            bgColor: 'bg-[#E8F5E9]',
+            iconColor: 'text-[#487749]',
         },
         {
             label: 'Training',
-            value: mockKPIData.training.toLocaleString(),
+            value: kpiData.training.toLocaleString(),
             icon: <GraduationCap className="w-6 h-6" />,
-            bgColor: 'bg-emerald-50',
-            iconColor: 'text-emerald-700',
+            bgColor: 'bg-[#E8F5E9]',
+            iconColor: 'text-[#487749]',
         },
         {
             label: 'Total Staff',
-            value: mockKPIData.totalStaff,
+            value: kpiData.totalStaff,
             icon: <Tag className="w-6 h-6" />,
-            bgColor: 'bg-emerald-50',
-            iconColor: 'text-emerald-700',
+            bgColor: 'bg-[#E8F5E9]',
+            iconColor: 'text-[#487749]',
         },
     ]
 
@@ -137,13 +262,13 @@ export const SuperAdminDashboard: React.FC = () => {
             {/* Filters */}
             <div className="flex gap-4">
                 <div className="w-48">
-                    <label className="block text-sm font-medium text-emerald-700 mb-2">
+                    <label className="block text-sm font-medium text-[#487749] mb-2">
                         Year
                     </label>
                     <select
                         value={selectedYear}
                         onChange={e => setSelectedYear(e.target.value)}
-                        className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] transition-all duration-200 hover:border-[#BDBDBD]"
+                        className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] bg-white text-[#212121] transition-all duration-200 hover:border-[#BDBDBD]"
                     >
                         <option value="All">All</option>
                         <option value="2023">2023</option>
@@ -153,13 +278,13 @@ export const SuperAdminDashboard: React.FC = () => {
                     </select>
                 </div>
                 <div className="w-48">
-                    <label className="block text-sm font-medium text-emerald-700 mb-2">
+                    <label className="block text-sm font-medium text-[#487749] mb-2">
                         KVK
                     </label>
                     <select
                         value={selectedKVK}
                         onChange={e => setSelectedKVK(e.target.value)}
-                        className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] transition-all duration-200 hover:border-[#BDBDBD]"
+                        className="w-full h-12 px-4 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] bg-white text-[#212121] transition-all duration-200 hover:border-[#BDBDBD]"
                     >
                         <option value="All">All</option>
                         <option value="KVK Araria">KVK Araria</option>
@@ -204,7 +329,7 @@ export const SuperAdminDashboard: React.FC = () => {
                             OFT
                         </h3>
                         <div className="space-y-3">
-                            {mockOFTData.map((item, index) => {
+                            {filteredOFTData.map((item, index) => {
                                 const progress = calculateProgress(
                                     item.completed,
                                     item.total
@@ -245,7 +370,7 @@ export const SuperAdminDashboard: React.FC = () => {
                             FLD
                         </h3>
                         <div className="space-y-3">
-                            {mockFLDData.map((item, index) => {
+                            {filteredFLDData.map((item, index) => {
                                 const progress = calculateProgress(
                                     item.completed,
                                     item.total
@@ -287,16 +412,16 @@ export const SuperAdminDashboard: React.FC = () => {
                                 Training
                             </h3>
                             <div className="flex gap-2">
-                                <select className="text-xs border border-[#E0E0E0] rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] transition-all duration-200">
+                                <select className="text-xs border border-[#E0E0E0] rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] bg-white text-[#212121] transition-all duration-200">
                                     <option>All</option>
                                 </select>
-                                <select className="text-xs border border-[#E0E0E0] rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] transition-all duration-200">
+                                <select className="text-xs border border-[#E0E0E0] rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] bg-white text-[#212121] transition-all duration-200">
                                     <option>All</option>
                                 </select>
                             </div>
                         </div>
                         <div className="space-y-3">
-                            {mockTrainingData.map((item, index) => (
+                            {filteredTrainingData.map((item, index) => (
                                 <div key={index} className="space-y-2">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm font-medium text-[#212121]">
@@ -331,12 +456,12 @@ export const SuperAdminDashboard: React.FC = () => {
                             <h3 className="text-lg font-semibold text-[#212121]">
                                 Extension Activity
                             </h3>
-                            <select className="text-xs border border-[#E0E0E0] rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 bg-white text-[#212121] transition-all duration-200">
+                            <select className="text-xs border border-[#E0E0E0] rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] bg-white text-[#212121] transition-all duration-200">
                                 <option>All</option>
                             </select>
                         </div>
                         <div className="space-y-3">
-                            {mockExtensionActivity.map((item, index) => (
+                            {filteredExtensionData.map((item, index) => (
                                 <div key={index} className="space-y-2">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm font-medium text-[#212121]">

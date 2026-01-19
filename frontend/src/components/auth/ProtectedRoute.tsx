@@ -33,7 +33,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                     </p>
                     <a
                         href="/dashboard"
-                        className="inline-block px-6 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                        className="inline-block px-6 py-2 bg-[#487749] text-white rounded-xl hover:bg-[#487749] transition-all duration-200 shadow-sm hover:shadow-md"
                     >
                         Go to Dashboard
                     </a>
