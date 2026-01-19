@@ -12,6 +12,7 @@ import { OFTFLDTab } from './masters/OFTFLDTab'
 import { TrainingExtensionTab } from './masters/TrainingExtensionTab'
 import { ProductionProjectsTab } from './masters/ProductionProjectsTab'
 import { PublicationsTab } from './masters/PublicationsTab'
+import { SidebarLayout } from '../common/SidebarLayout'
 
 interface Tab {
     id: string
@@ -123,47 +124,17 @@ export const AllMasters: React.FC = () => {
     const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
     return (
-        <div className="h-full flex flex-col bg-[#FAF9F6]">
-            {/* Header */}
-            <div className="bg-white border-b border-[#E0E0E0] px-6 py-4">
-                <h1 className="text-2xl font-semibold text-[#487749]">All Masters</h1>
-                <p className="text-sm text-[#757575] mt-1">
-                    Manage all master data including zones, states, organizations, OFT, FLD, training, extension, production, and publications
-                </p>
-            </div>
-
-            {/* Tabs */}
-            <div className="bg-white border-b border-[#E0E0E0] px-6">
-                <div className="flex space-x-1 overflow-x-auto">
-                    {tabs.map(tab => {
-                        const isActive = activeTab === tab.id
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => handleTabClick(tab)}
-                                className={`
-                                    flex items-center gap-2 px-4 py-3 text-sm font-medium
-                                    transition-all duration-200 whitespace-nowrap
-                                    border-b-2 border-transparent rounded-t-xl
-                                    ${
-                                        isActive
-                                            ? 'text-[#487749] border-[#487749] bg-[#E8F5E9] border-l-2'
-                                            : 'text-[#757575] hover:text-[#487749] hover:bg-[#F5F5F5]'
-                                    }
-                                `}
-                            >
-                                {tab.icon}
-                                <span>{tab.label}</span>
-                            </button>
-                        )
-                    })}
-                </div>
-            </div>
-
-            {/* Tab Content */}
-            <div className="flex-1 overflow-y-auto">
-                {activeTabData.component}
-            </div>
-        </div>
+        <SidebarLayout
+            title="All Masters"
+            description="Manage all master data including zones, states, organizations, OFT, FLD, training, extension, production, and publications"
+            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, icon: tab.icon }))}
+            activeTab={activeTab}
+            onTabClick={(tabId) => {
+                const tab = tabs.find(t => t.id === tabId)
+                if (tab) handleTabClick(tab)
+            }}
+        >
+            {activeTabData.component}
+        </SidebarLayout>
     )
 }

@@ -299,19 +299,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             if (level === 0) {
                 // Top level items
                 return isItemActive
-                    ? 'bg-[#3d6540] text-white border border-[#2d4d30] shadow-sm'
-                    : 'text-white/80 hover:bg-[#3d6540]/50 hover:text-white'
+                    ? 'bg-[#3d6540] text-white border-2 border-black/5 shadow-sm'
+                    : 'text-white/80 hover:bg-[#3d6540] hover:text-white'
             } else {
                 // Nested items
                 return isItemActive
                     ? 'bg-[#3d6540]/50 text-white'
-                    : 'text-white/70 hover:bg-[#3d6540]/50 hover:text-white'
+                    : 'text-white/70 hover:bg-[#3d6540] hover:text-white'
             }
         }
 
         // Calculate indentation for nested items with better spacing
         const indentClass = level > 0 ? `ml-${Math.min(level * 3, 12)}` : ''
-        const paddingClass = level === 0 ? 'px-3' : level === 1 ? 'px-3 pl-6' : 'px-3 pl-9'
+        const paddingClass = isOpen
+            ? (level === 0 ? 'px-3' : level === 1 ? 'px-3 pl-6' : 'px-3 pl-9')
+            : 'px-0 justify-center'
 
         return (
             <div key={uniquePath} className={`${indentClass} transition-all duration-200`}>
@@ -325,7 +327,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                                     onMouseDown={(e) => e.preventDefault()}
                                     data-menu-item
                                     tabIndex={debouncedSearchQuery ? 0 : -1}
-                                    className={`flex-1 flex items-center gap-2.5 ${paddingClass} py-2.5 mx-1 rounded-xl transition-all duration-200 ${getItemStyles()} ${isItemActive ? 'font-medium' : ''} ${
+                                    className={`flex-1 flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'} ${paddingClass} py-2.5 mx-1 rounded-xl transition-all duration-200 ${getItemStyles()} ${isItemActive ? 'font-medium' : ''} ${
                                         level > 0 ? 'text-sm' : ''
                                     } outline-none focus:outline-none active:outline-none`}
                                     aria-label={`Navigate to ${item.label}`}
@@ -339,7 +341,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                                     }}
                                 >
                                     {item.icon && (
-                                        <span className={`shrink-0 ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
+                                        <span className={`shrink-0 flex items-center justify-center ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
                                             {item.icon}
                                         </span>
                                     )}
@@ -350,11 +352,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                                     )}
                                 </Link>
                             ) : (
-                                <div className={`flex-1 flex items-center gap-2.5 ${paddingClass} py-2 mx-1 rounded-md transition-all duration-200 ${getItemStyles()} ${
+                                <div className={`flex-1 flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'} ${paddingClass} py-2 mx-1 rounded-md transition-all duration-200 ${getItemStyles()} ${
                                     level > 0 ? 'text-sm' : ''
                                 }`}>
                                     {item.icon && (
-                                        <span className={`shrink-0 ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
+                                        <span className={`shrink-0 flex items-center justify-center ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
                                             {item.icon}
                                         </span>
                                     )}
@@ -413,7 +415,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                         onMouseDown={(e) => e.preventDefault()}
                         data-menu-item
                         tabIndex={debouncedSearchQuery ? 0 : -1}
-                                className={`flex items-center gap-2.5 ${paddingClass} py-2.5 mx-1 rounded-xl transition-all duration-200 ${getItemStyles()} ${isItemActive ? 'font-medium' : ''} ${
+                        className={`flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'} ${paddingClass} py-2.5 mx-1 rounded-xl transition-all duration-200 ${getItemStyles()} ${isItemActive ? 'font-medium' : ''} ${
                             level > 0 ? 'text-sm' : ''
                         } outline-none focus:outline-none active:outline-none`}
                         aria-label={`Navigate to ${item.label}`}
@@ -427,7 +429,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                         }}
                     >
                         {item.icon && (
-                            <span className={`shrink-0 ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
+                            <span className={`shrink-0 flex items-center justify-center ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
                                 {item.icon}
                             </span>
                         )}
@@ -483,8 +485,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             >
                 <div className="flex flex-col h-screen">
                     {/* Header */}
-                    <div className="flex items-center justify-between px-4 h-16 border-b border-[#3d6540]">
-                            {isOpen && (
+                    <div className={`flex items-center ${isOpen ? 'justify-between px-4' : 'justify-center px-0'} h-16 border-b border-[#3d6540]`}>
+                        {isOpen && (
                             <h2 className="text-lg font-semibold text-white">
                                 ATARI Zone IV
                             </h2>
@@ -515,7 +517,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search menu... (Ctrl+K)"
-                                    className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border transition-all duration-200 bg-[#3d6540] border-[#2d4d30] text-white placeholder-white/50 focus:ring-2 focus:ring-white/30 focus:border-white/30 focus:outline-none"
+                                    className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border-2 transition-all duration-200 bg-[#3d6540] border-black/5 text-white placeholder-white/50 focus:ring-2 focus:ring-white/30 focus:border-white/30 focus:outline-none"
                                     aria-label="Search menu items"
                                     aria-describedby="search-help-text"
                                     role="searchbox"
@@ -592,7 +594,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                             <button
                                 onClick={handleLogout}
                                 onMouseDown={(e) => e.preventDefault()}
-                                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border transition-all duration-200 outline-none focus:outline-none active:outline-none text-white bg-[#3d6540] border-[#2d4d30] hover:bg-[#2d4d30]"
+                                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border-2 transition-all duration-200 outline-none focus:outline-none active:outline-none text-white bg-[#3d6540] border-black/5 hover:bg-[#2d4d30]"
                                 aria-label="Logout"
                             >
                                 <LogOut className="w-4 h-4 shrink-0" />

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { localStorageService } from '../../../utils/localStorageService'
 import { BankAccount } from '../../../types/bankAccount'
-import { Card, CardContent } from '../../ui/Card'
 import { exportService } from '../../../utils/exportService'
+import { DynamicTablePage, TableColumn, ButtonOption } from '../../common/DynamicTablePage'
 import { Download, FileSpreadsheet } from 'lucide-react'
-import { Button } from '../../ui/Button'
 
 interface BankAccountsTabProps {
     kvkId: number
@@ -20,7 +19,6 @@ export const BankAccountsTab: React.FC<BankAccountsTabProps> = ({ kvkId }) => {
 
     const loadAccounts = () => {
         const bankAccounts = localStorageService.getBankAccounts(kvkId)
-        // Load KVK details for each account
         const kvks = localStorageService.getKVKDetails()
         const accountsWithKvk = bankAccounts.map(acc => {
             const kvk = kvks.find(k => k.id === acc.kvk_id)
@@ -61,91 +59,39 @@ export const BankAccountsTab: React.FC<BankAccountsTabProps> = ({ kvkId }) => {
         }
     }
 
-    return (
-        <Card>
-            <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <h3 className="text-xl font-bold text-[#487749]">
-                        Bank Accounts ({accounts.length})
-                    </h3>
-                    <div className="flex gap-2 flex-wrap">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleExportPDF}
-                            disabled={exporting}
-                            className="flex items-center"
-                        >
-                            <Download className="w-4 h-4 mr-2 shrink-0" />
-                            <span>Export PDF</span>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleExportExcel}
-                            disabled={exporting}
-                            className="flex items-center"
-                        >
-                            <FileSpreadsheet className="w-4 h-4 mr-2 shrink-0" />
-                            <span>Export Excel</span>
-                        </Button>
-                    </div>
-                </div>
+    const columns: TableColumn[] = [
+        { key: 'account_type', label: 'Account Type', sortable: true },
+        { key: 'account_name', label: 'Account Name', sortable: true },
+        { key: 'bank_name', label: 'Bank Name', sortable: true },
+        { key: 'location', label: 'Location', sortable: true },
+        { key: 'account_number', label: 'Account Number', sortable: true },
+    ]
 
-                {accounts.length === 0 ? (
-                    <p className="text-[#757575] text-center py-8">
-                        No bank accounts found
-                    </p>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr className="bg-[#E8F5E9] border-b border-[#E0E0E0]">
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Account Type
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Account Name
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Bank Name
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Location
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Account Number
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {accounts.map(account => (
-                                    <tr
-                                        key={account.id}
-                                        className="border-b border-[#E0E0E0] hover:bg-[#FAFAFA]"
-                                    >
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {account.account_type}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {account.account_name}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {account.bank_name}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {account.location}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {account.account_number}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+    const buttonOptions: ButtonOption[] = [
+        {
+            label: 'Export PDF',
+            icon: <Download className="w-4 h-4" />,
+            onClick: handleExportPDF,
+            disabled: exporting,
+        },
+        {
+            label: 'Export Excel',
+            icon: <FileSpreadsheet className="w-4 h-4" />,
+            onClick: handleExportExcel,
+            disabled: exporting,
+        },
+    ]
+
+    return (
+        <DynamicTablePage
+            title={`Bank Accounts (${accounts.length})`}
+            description="Manage bank account details for this KVK"
+            columns={columns}
+            data={accounts}
+            buttonOptions={buttonOptions}
+            showBreadcrumbs={false}
+            showTabs={false}
+            showBack={false}
+        />
     )
 }

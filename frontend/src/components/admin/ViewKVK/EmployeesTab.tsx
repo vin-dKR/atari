@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { localStorageService } from '../../../utils/localStorageService'
 import { Staff } from '../../../types/staff'
-import { Card, CardContent } from '../../ui/Card'
 import { exportService } from '../../../utils/exportService'
+import { DynamicTablePage, TableColumn, ButtonOption } from '../../common/DynamicTablePage'
 import { Download, FileSpreadsheet } from 'lucide-react'
-import { Button } from '../../ui/Button'
 
 interface EmployeesTabProps {
     kvkId: number
@@ -20,7 +19,6 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
 
     const loadStaff = () => {
         const staffList = localStorageService.getStaff(kvkId)
-        // Load KVK details for each staff member
         const kvks = localStorageService.getKVKDetails()
         const staffWithKvk = staffList.map(s => {
             const kvk = kvks.find(k => k.id === s.kvk_id)
@@ -61,111 +59,56 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
         }
     }
 
-    return (
-        <Card>
-            <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <h3 className="text-xl font-bold text-[#487749]">
-                        Employees ({staff.length})
-                    </h3>
-                    <div className="flex gap-2 flex-wrap">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleExportPDF}
-                            disabled={exporting}
-                            className="flex items-center"
-                        >
-                            <Download className="w-4 h-4 mr-2 shrink-0" />
-                            <span>Export PDF</span>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleExportExcel}
-                            disabled={exporting}
-                            className="flex items-center"
-                        >
-                            <FileSpreadsheet className="w-4 h-4 mr-2 shrink-0" />
-                            <span>Export Excel</span>
-                        </Button>
-                    </div>
-                </div>
-
-                {staff.length === 0 ? (
-                    <p className="text-[#757575] text-center py-8">
-                        No employees found
-                    </p>
+    const columns: TableColumn[] = [
+        { key: 'staff_name', label: 'Staff Name', sortable: true },
+        { key: 'post', label: 'Post', sortable: true, render: (value, row) => row.post?.post_name || '-' },
+        { key: 'mobile', label: 'Mobile', sortable: true },
+        { key: 'email', label: 'Email', sortable: true },
+        { key: 'discipline', label: 'Discipline', sortable: true },
+        { key: 'job_type', label: 'Job Type', sortable: true },
+        {
+            key: 'status',
+            label: 'Status',
+            sortable: true,
+            render: (value, row) => (
+                row.is_transferred === 1 ? (
+                    <span className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-xl">
+                        Transferred
+                    </span>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr className="bg-[#E8F5E9] border-b border-[#E0E0E0]">
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Staff Name
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Post
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Mobile
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Email
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Discipline
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Job Type
-                                    </th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
-                                        Status
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {staff.map(member => (
-                                    <tr
-                                        key={member.id}
-                                        className="border-b border-[#E0E0E0] hover:bg-[#FAFAFA]"
-                                    >
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.staff_name}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.post?.post_name || '-'}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.mobile}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.email}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.discipline}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.job_type}
-                                        </td>
-                                        <td className="px-4 py-3 text-[#212121]">
-                                            {member.is_transferred === 1 ? (
-                                                <span className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-xl">
-                                                    Transferred
-                                                </span>
-                                            ) : (
-                                                <span className="px-2 py-1 text-xs font-medium bg-[#E8F5E9] text-[#487749] rounded-xl">
-                                                    Active
-                                                </span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+                    <span className="px-2 py-1 text-xs font-medium bg-[#E8F5E9] text-[#487749] rounded-xl">
+                        Active
+                    </span>
+                )
+            ),
+        },
+    ]
+
+    const buttonOptions: ButtonOption[] = [
+        {
+            label: 'Export PDF',
+            icon: <Download className="w-4 h-4" />,
+            onClick: handleExportPDF,
+            disabled: exporting,
+        },
+        {
+            label: 'Export Excel',
+            icon: <FileSpreadsheet className="w-4 h-4" />,
+            onClick: handleExportExcel,
+            disabled: exporting,
+        },
+    ]
+
+    return (
+        <DynamicTablePage
+            title={`Employees (${staff.length})`}
+            description="Manage employee details for this KVK"
+            columns={columns}
+            data={staff}
+            buttonOptions={buttonOptions}
+            showBreadcrumbs={false}
+            showTabs={false}
+            showBack={false}
+        />
     )
 }

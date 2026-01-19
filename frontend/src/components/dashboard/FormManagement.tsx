@@ -5,13 +5,12 @@ import {
     Trophy,
     BarChart3,
     FolderTree,
-    FileText,
-    ChevronRight
 } from 'lucide-react'
 import { AboutKVKTab } from './forms/AboutKVKTab'
 import { AchievementsTab } from './forms/AchievementsTab'
 import { PerformanceTab } from './forms/PerformanceTab'
 import { MiscellaneousTab } from './forms/MiscellaneousTab'
+import { SidebarLayout } from '../common/SidebarLayout'
 
 interface Tab {
     id: string
@@ -89,47 +88,17 @@ export const FormManagement: React.FC = () => {
     const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
 
     return (
-        <div className="h-full flex flex-col bg-[#FAF9F6]">
-            {/* Header */}
-            <div className="bg-white border-b border-[#E0E0E0] px-6 py-4">
-                <h1 className="text-2xl font-semibold text-[#487749]">Form Management</h1>
-                <p className="text-sm text-[#757575] mt-1">
-                    Manage KVK forms, achievements, performance indicators, and miscellaneous data
-                </p>
-            </div>
-
-            {/* Tabs */}
-            <div className="bg-white border-b border-[#E0E0E0] px-6">
-                <div className="flex space-x-1 overflow-x-auto">
-                    {tabs.map(tab => {
-                        const isActive = activeTab === tab.id
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => handleTabClick(tab)}
-                                className={`
-                                    flex items-center gap-2 px-4 py-3 text-sm font-medium
-                                    transition-all duration-200 whitespace-nowrap
-                                    border-b-2 border-transparent rounded-t-xl
-                                    ${
-                                        isActive
-                                            ? 'text-[#487749] border-[#487749] bg-[#E8F5E9] border-l-2'
-                                            : 'text-[#757575] hover:text-[#487749] hover:bg-[#F5F5F5]'
-                                    }
-                                `}
-                            >
-                                {tab.icon}
-                                <span>{tab.label}</span>
-                            </button>
-                        )
-                    })}
-                </div>
-            </div>
-
-            {/* Tab Content */}
-            <div className="flex-1 overflow-y-auto">
-                {activeTabData.component}
-            </div>
-        </div>
+        <SidebarLayout
+            title="Form Management"
+            description="Manage KVK forms, achievements, performance indicators, and miscellaneous data"
+            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, icon: tab.icon }))}
+            activeTab={activeTab}
+            onTabClick={(tabId) => {
+                const tab = tabs.find(t => t.id === tabId)
+                if (tab) handleTabClick(tab)
+            }}
+        >
+            {activeTabData.component}
+        </SidebarLayout>
     )
 }

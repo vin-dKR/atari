@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
     if (!user) return null
 
     return (
-        <header className="bg-white border-b border-[#E0E0E0] sticky top-0 z-30 shadow-sm">
+        <header className="bg-white border-b border-[#E0E0E0] sticky top-0 z-30">
             <div className="flex items-center justify-between px-4 lg:px-6 h-16">
                 {/* Left side - Mobile menu button and title */}
                 <div className="flex items-center gap-4">

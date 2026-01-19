@@ -1,26 +1,51 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Search, Download, Edit2, Trash2, X, Save } from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Plus, Search, Download, Edit2, Trash2, X, Save, ChevronLeft } from 'lucide-react'
+import { Breadcrumbs } from '../../common/Breadcrumbs'
+import { TabNavigation } from '../../common/TabNavigation'
+import { getBreadcrumbsForPath, getRouteConfig, getSiblingRoutes } from '../../../config/routeConfig'
+import { getAllMastersMockData } from '../../../mocks/allMastersMockData'
 
 interface MasterViewProps {
     title: string
     description?: string
-    fields: string[]
+    fields?: string[]
     mockData?: any[]
 }
 
 export const MasterView: React.FC<MasterViewProps> = ({
     title,
     description = `Manage and view all ${title.toLowerCase()} in the system`,
-    fields,
-    mockData = []
+    fields: propFields,
+    mockData
 }) => {
+    const navigate = useNavigate()
+    const location = useLocation()
     const [searchQuery, setSearchQuery] = useState('')
+
+    // Route meta, siblings & breadcrumbs
+    const routeConfig = getRouteConfig(location.pathname)
+    const breadcrumbs = getBreadcrumbsForPath(location.pathname)
+    const siblingRoutes = getSiblingRoutes(location.pathname)
     const [debouncedSearch, setDebouncedSearch] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
+    const fields = propFields && propFields.length > 0 ? propFields : ['name']
     const [editingId, setEditingId] = useState<number | null>(null)
     const [editValues, setEditValues] = useState<Record<string, string>>({})
-    const [items, setItems] = useState(mockData)
+    const [items, setItems] = useState<any[]>(() => {
+        if (mockData && mockData.length) return mockData
+        return getAllMastersMockData(location.pathname)
+    })
     const itemsPerPage = 10
+
+    // Keep items in sync when mockData or path changes
+    useEffect(() => {
+        if (mockData && mockData.length) {
+            setItems(mockData)
+        } else {
+            setItems(getAllMastersMockData(location.pathname))
+        }
+    }, [mockData, location.pathname])
 
     // Debounce search
     useEffect(() => {
@@ -46,6 +71,7 @@ export const MasterView: React.FC<MasterViewProps> = ({
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
     const paginatedData = filteredData.slice(startIndex, endIndex)
+    console.log("-00000", paginatedData)
 
     const handleEdit = (item: any) => {
         setEditingId(item.id)
@@ -106,6 +132,36 @@ export const MasterView: React.FC<MasterViewProps> = ({
 
     return (
         <div className="p-6">
+            {/* Back + Breadcrumbs */}
+            {breadcrumbs.length > 0 && (
+                <div className="mb-6 flex items-center gap-4">
+                    <button
+                        onClick={() => {
+                            if (routeConfig?.parent) {
+                                navigate(routeConfig.parent)
+                            } else {
+                                navigate('/all-master')
+                            }
+                        }}
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-[#487749] border border-[#E0E0E0] rounded-xl hover:bg-[#F5F5F5] transition-colors"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                        Back
+                    </button>
+                    <Breadcrumbs items={breadcrumbs.map((b, i) => ({ ...b, level: i }))} showHome={false} />
+                </div>
+            )}
+
+            {/* Sibling Tabs for related masters */}
+            {siblingRoutes.length > 1 && (
+                <div className="mb-6">
+                    <TabNavigation
+                        tabs={siblingRoutes.map(r => ({ label: r.title, path: r.path }))}
+                        currentPath={location.pathname}
+                    />
+                </div>
+            )}
+
             {/* Header with Actions */}
             <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -145,7 +201,7 @@ export const MasterView: React.FC<MasterViewProps> = ({
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden shadow-sm">
+            <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
@@ -187,7 +243,7 @@ export const MasterView: React.FC<MasterViewProps> = ({
                                                         }}
                                                     />
                                                 ) : (
-                                                    <span className="font-medium">{item[field] || '-'}</span>
+                                                    <span className="font-medium">{item[field] || item.zoneName || '-'}</span>
                                                 )}
                                             </td>
                                         ))}
@@ -290,11 +346,10 @@ export const MasterView: React.FC<MasterViewProps> = ({
                                     <button
                                         key={page}
                                         onClick={() => setCurrentPage(page)}
-                                        className={`px-3 py-2 min-w-[2.5rem] border rounded-xl text-sm font-medium transition-all duration-200 ${
-                                            currentPage === page
-                                                ? 'bg-[#487749] text-white border-[#487749]'
-                                                : 'border-[#E0E0E0] text-[#487749] hover:bg-[#F5F5F5] hover:border-[#BDBDBD]'
-                                        }`}
+                                        className={`px-3 py-2 min-w-[2.5rem] border rounded-xl text-sm font-medium transition-all duration-200 ${currentPage === page
+                                            ? 'bg-[#487749] text-white border-[#487749]'
+                                            : 'border-[#E0E0E0] text-[#487749] hover:bg-[#F5F5F5] hover:border-[#BDBDBD]'
+                                            }`}
                                     >
                                         {page}
                                     </button>

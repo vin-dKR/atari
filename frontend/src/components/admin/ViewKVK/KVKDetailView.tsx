@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { localStorageService } from '../../../utils/localStorageService'
 import { KVKDetails } from '../../../types/kvk'
-import { BankAccount } from '../../../types/bankAccount'
-import { Staff } from '../../../types/staff'
+import { RouteWrapper } from '../../common/RouteWrapper'
+import { TabNavigation } from '../../common/TabNavigation'
 import { Card, CardContent } from '../../ui/Card'
-import { Button } from '../../ui/Button'
-import { ArrowLeft, Building2, CreditCard, Users } from 'lucide-react'
 import { KVKInfoTab } from './KVKInfoTab'
 import { BankAccountsTab } from './BankAccountsTab'
 import { EmployeesTab } from './EmployeesTab'
+import { Building2, CreditCard, Users } from 'lucide-react'
 
 export const KVKDetailView: React.FC = () => {
     const { id } = useParams<{ id: string }>()
+    const location = useLocation()
     const navigate = useNavigate()
     const [kvk, setKvk] = useState<KVKDetails | null>(null)
     const [activeTab, setActiveTab] = useState<'info' | 'bank' | 'employees'>('info')
@@ -26,28 +26,40 @@ export const KVKDetailView: React.FC = () => {
         }
     }, [id])
 
+    // Determine active tab from URL or default
+    useEffect(() => {
+        if (location.pathname.includes('/bank')) {
+            setActiveTab('bank')
+        } else if (location.pathname.includes('/employees')) {
+            setActiveTab('employees')
+        } else {
+            setActiveTab('info')
+        }
+    }, [location.pathname])
+
     if (!kvk) {
         return (
-            <div className="p-6">
-                <p className="text-[#757575]">KVK not found</p>
-            </div>
+            <RouteWrapper>
+                <div className="p-6">
+                    <p className="text-[#757575]">KVK not found</p>
+                </div>
+            </RouteWrapper>
         )
     }
 
+    const tabs = [
+        { label: 'KVK Information', path: `/forms/about-kvk/view-kvks/${id}`, icon: <Building2 className="w-4 h-4" /> },
+        { label: 'Bank Accounts', path: `/forms/about-kvk/view-kvks/${id}/bank`, icon: <CreditCard className="w-4 h-4" /> },
+        { label: 'Employees', path: `/forms/about-kvk/view-kvks/${id}/employees`, icon: <Users className="w-4 h-4" /> },
+    ]
+
     return (
-        <div className="space-y-6">
-            <Card>
-                <CardContent className="p-6">
-                    <div className="flex items-center gap-4 mb-6">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => navigate('/admin/kvk')}
-                        >
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to List
-                        </Button>
-                        <div>
+        <RouteWrapper showBreadcrumbs={true} showTabs={false} showBack={true}>
+            <div className="space-y-6">
+                {/* Header */}
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="mb-6">
                             <h2 className="text-2xl font-bold text-[#487749]">
                                 {kvk.kvk_name}
                             </h2>
@@ -55,57 +67,20 @@ export const KVKDetailView: React.FC = () => {
                                 {kvk.state?.state_name} • {kvk.district?.district_name}
                             </p>
                         </div>
-                    </div>
 
-                    {/* Tabs */}
-                    <div className="flex gap-2 border-b border-[#E0E0E0]">
-                        <button
-                            onClick={() => setActiveTab('info')}
-                            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
-                                activeTab === 'info'
-                                    ? 'border-[#487749] text-[#487749]'
-                                    : 'border-transparent text-[#757575] hover:text-[#487749]'
-                            }`}
-                        >
-                            <div className="flex items-center gap-2">
-                                <Building2 className="w-4 h-4" />
-                                KVK Information
-                            </div>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('bank')}
-                            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
-                                activeTab === 'bank'
-                                    ? 'border-[#487749] text-[#487749]'
-                                    : 'border-transparent text-[#757575] hover:text-[#487749]'
-                            }`}
-                        >
-                            <div className="flex items-center gap-2">
-                                <CreditCard className="w-4 h-4" />
-                                Bank Accounts
-                            </div>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('employees')}
-                            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
-                                activeTab === 'employees'
-                                    ? 'border-[#487749] text-[#487749]'
-                                    : 'border-transparent text-[#757575] hover:text-[#487749]'
-                            }`}
-                        >
-                            <div className="flex items-center gap-2">
-                                <Users className="w-4 h-4" />
-                                Employees
-                            </div>
-                        </button>
-                    </div>
-                </CardContent>
-            </Card>
+                        {/* Tabs */}
+                        <TabNavigation
+                            tabs={tabs.map(t => ({ label: t.label, path: t.path }))}
+                            currentPath={location.pathname}
+                        />
+                    </CardContent>
+                </Card>
 
-            {/* Tab Content */}
-            {activeTab === 'info' && <KVKInfoTab kvk={kvk} />}
-            {activeTab === 'bank' && <BankAccountsTab kvkId={kvk.id} />}
-            {activeTab === 'employees' && <EmployeesTab kvkId={kvk.id} />}
-        </div>
+                {/* Tab Content */}
+                {activeTab === 'info' && <KVKInfoTab kvk={kvk} />}
+                {activeTab === 'bank' && <BankAccountsTab kvkId={kvk.id} />}
+                {activeTab === 'employees' && <EmployeesTab kvkId={kvk.id} />}
+            </div>
+        </RouteWrapper>
     )
 }
