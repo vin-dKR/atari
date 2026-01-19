@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../../stores/authStore'
 import { localStorageService } from '../../../utils/localStorageService'
 import { Staff } from '../../../types/staff'
@@ -9,6 +10,8 @@ import { searchService } from '../../../utils/searchService'
 import { Plus, Search, Edit2, Trash2, Download, FileSpreadsheet } from 'lucide-react'
 
 export const StaffList: React.FC = () => {
+    const navigate = useNavigate()
+    const location = useLocation()
     const { user } = useAuthStore()
     const [staff, setStaff] = useState<Staff[]>([])
     const [filteredStaff, setFilteredStaff] = useState<Staff[]>([])
@@ -16,6 +19,14 @@ export const StaffList: React.FC = () => {
     const [exporting, setExporting] = useState(false)
 
     const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
+
+    // Determine the add path based on current location
+    const getAddPath = () => {
+        if (location.pathname.includes('/forms/about-kvk/')) {
+            return '/forms/about-kvk/employee-details/add'
+        }
+        return '/kvk/staff/add'
+    }
 
     useEffect(() => {
         loadStaff()
@@ -132,7 +143,7 @@ export const StaffList: React.FC = () => {
                                 <Button
                                     variant="primary"
                                     size="sm"
-                                    onClick={() => alert('Add Staff feature coming soon')}
+                                    onClick={() => navigate(getAddPath())}
                                     className="flex items-center"
                                 >
                                     <Plus className="w-4 h-4 mr-2 shrink-0" />

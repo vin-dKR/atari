@@ -20,9 +20,9 @@ const mockDataByYear: Record<string, {
         kpiData: { organization: 9, kvk: 66, totalOFT: 462, totalFLD: 788, training: 7284, totalStaff: 636 },
         oftData: [
             { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
-            { kvk: 'KVK Arwal', completed: 5, total: 1, status: 'over' },
+            { kvk: 'KVK Arwal', completed: 3, total: 5, status: 'in-progress' },
             { kvk: 'KVK Aurangabad', completed: 0, total: 7, status: 'pending' },
-            { kvk: 'KVK Banka', completed: 4, total: 3, status: 'over' },
+            { kvk: 'KVK Banka', completed: 3, total: 4, status: 'in-progress' },
         ],
         fldData: [
             { kvk: 'KVK Araria', completed: 5, total: 8, status: 'in-progress' },
@@ -74,7 +74,7 @@ const mockDataByYear: Record<string, {
         kpiData: { organization: 9, kvk: 62, totalOFT: 398, totalFLD: 650, training: 6450, totalStaff: 610 },
         oftData: [
             { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
-            { kvk: 'KVK Arwal', completed: 4, total: 2, status: 'over' },
+            { kvk: 'KVK Arwal', completed: 2, total: 4, status: 'in-progress' },
             { kvk: 'KVK Aurangabad', completed: 3, total: 6, status: 'in-progress' },
             { kvk: 'KVK Banka', completed: 3, total: 3, status: 'complete' },
         ],
@@ -101,9 +101,9 @@ const mockDataByYear: Record<string, {
         kpiData: { organization: 9, kvk: 66, totalOFT: 462, totalFLD: 788, training: 7284, totalStaff: 636 },
         oftData: [
             { kvk: 'KVK Araria', completed: 2, total: 2, status: 'complete' },
-            { kvk: 'KVK Arwal', completed: 5, total: 1, status: 'over' },
+            { kvk: 'KVK Arwal', completed: 4, total: 5, status: 'in-progress' },
             { kvk: 'KVK Aurangabad', completed: 0, total: 7, status: 'pending' },
-            { kvk: 'KVK Banka', completed: 4, total: 3, status: 'over' },
+            { kvk: 'KVK Banka', completed: 3, total: 4, status: 'in-progress' },
         ],
         fldData: [
             { kvk: 'KVK Araria', completed: 6, total: 10, status: 'in-progress' },

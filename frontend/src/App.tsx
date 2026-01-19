@@ -25,6 +25,7 @@ import { Reports } from './pages/Reports'
 import { ViewKVKDetails } from './components/kvk/KVKDetails/ViewKVKDetails'
 import { BankAccountList } from './components/kvk/BankAccounts/BankAccountList'
 import { StaffList } from './components/kvk/Staff/StaffList'
+import { AddStaff } from './components/kvk/Staff/AddStaff'
 import { KVKListView } from './components/admin/ViewKVK/KVKListView'
 import { KVKDetailView } from './components/admin/ViewKVK/KVKDetailView'
 import { AdminKVKRedirect } from './components/common/AdminKVKRedirect'
@@ -163,6 +164,16 @@ function App() {
                     <Route
                         path="/forms/about-kvk/details"
                         element={<ViewKVKDetails />}
+                    />
+
+                    {/* KVK Staff Add Route */}
+                    <Route
+                        path="/kvk/staff/add"
+                        element={<AddStaff />}
+                    />
+                    <Route
+                        path="/forms/about-kvk/employee-details/add"
+                        element={<AddStaff />}
                     />
 
                     {/* Legacy routes - redirect to new paths */}
