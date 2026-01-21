@@ -36,10 +36,10 @@ export const RouteWrapper: React.FC<RouteWrapperProps> = ({
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 bg-white rounded-2xl p-1">
             {/* Back button and Breadcrumbs */}
             {showBreadcrumbs && breadcrumbs.length > 0 && (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 px-6 pt-4">
                     {showBack && (
                         <Button
                             variant="outline"

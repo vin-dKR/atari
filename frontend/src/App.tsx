@@ -28,6 +28,11 @@ import { KVKDetailView } from './components/admin/ViewKVK/KVKDetailView'
 import { AdminKVKRedirect } from './components/common/AdminKVKRedirect'
 import { DynamicFormPage } from './components/common/DynamicFormPage'
 import { ProjectsOverview } from './components/dashboard/forms/projects/ProjectsOverview'
+import { VehicleList } from './components/kvk/Vehicle/VehicleList'
+import { VehicleDetailsList } from './components/kvk/Vehicle/VehicleDetailsList'
+import { EquipmentList } from './components/kvk/Equipment/EquipmentList'
+import { EquipmentDetailsList } from './components/kvk/Equipment/EquipmentDetailsList'
+import { InfrastructureList } from './components/kvk/Infrastructure/InfrastructureList'
 
 // Import route config for dynamic rendering
 import { projectsRoutes, allMastersRoutes, aboutKvkRoutes, viewKvkRoutes } from './config/routeConfig'
@@ -54,9 +59,9 @@ function App() {
 
                     {/* All Masters - Dynamic MasterView routes */}
                     {allMastersRoutes.map(route => (
-                        <Route
-                            key={route.path}
-                            path={route.path}
+                            <Route
+                                key={route.path}
+                                path={route.path}
                             element={
                                 <MasterView
                                     title={route.title}
@@ -65,7 +70,7 @@ function App() {
                                     mockData={getAllMastersMockData(route.path)}
                                 />
                             }
-                        />
+                            />
                     ))}
 
                     {/* All Masters Catch-all */}
@@ -105,10 +110,26 @@ function App() {
 
                         if (route.path === '/forms/about-kvk/bank-account') {
                             Component = BankAccountList
-                        } else if (route.path === '/forms/about-kvk/employee-details') {
+                        } else if (
+                            route.path === '/forms/about-kvk/employee-details' ||
+                            route.path === '/forms/about-kvk/staff-transferred'
+                        ) {
                             Component = StaffList
                         } else if (route.path === '/forms/about-kvk/details') {
                             Component = ViewKVKDetails
+                        } else if (route.path === '/forms/about-kvk/infrastructure') {
+                            Component = InfrastructureList
+                        } else if (route.path === '/forms/about-kvk/vehicles') {
+                            Component = VehicleList
+                        } else if (route.path === '/forms/about-kvk/vehicle-details') {
+                            Component = VehicleDetailsList
+                        } else if (route.path === '/forms/about-kvk/equipments') {
+                            Component = EquipmentList
+                        } else if (
+                            route.path === '/forms/about-kvk/equipment-details' ||
+                            route.path === '/forms/about-kvk/farm-implements'
+                        ) {
+                            Component = EquipmentDetailsList
                         } else if (route.path === '/forms/about-kvk/employee-details/add') {
                             Component = AddStaff
                         }
@@ -138,7 +159,9 @@ function App() {
                         } else if (
                             route.path === '/forms/about-kvk/view-kvks/:id' ||
                             route.path === '/forms/about-kvk/view-kvks/:id/bank' ||
-                            route.path === '/forms/about-kvk/view-kvks/:id/employees'
+                            route.path === '/forms/about-kvk/view-kvks/:id/employees' ||
+                            route.path === '/forms/about-kvk/view-kvks/:id/vehicles' ||
+                            route.path === '/forms/about-kvk/view-kvks/:id/equipments'
                         ) {
                             Component = KVKDetailView
                         }

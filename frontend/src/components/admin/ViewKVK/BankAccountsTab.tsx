@@ -4,6 +4,7 @@ import { BankAccount } from '../../../types/bankAccount'
 import { exportService } from '../../../utils/exportService'
 import { DynamicTablePage, TableColumn, ButtonOption } from '../../common/DynamicTablePage'
 import { Download, FileSpreadsheet } from 'lucide-react'
+import { getMockBankAccounts, getMockKVKs } from '../../../mocks/kvkMockData'
 
 interface BankAccountsTabProps {
     kvkId: number
@@ -18,8 +19,15 @@ export const BankAccountsTab: React.FC<BankAccountsTabProps> = ({ kvkId }) => {
     }, [kvkId])
 
     const loadAccounts = () => {
-        const bankAccounts = localStorageService.getBankAccounts(kvkId)
-        const kvks = localStorageService.getKVKDetails()
+        let bankAccounts = localStorageService.getBankAccounts(kvkId)
+        let kvks = localStorageService.getKVKDetails()
+
+        if (!bankAccounts || bankAccounts.length === 0) {
+            bankAccounts = getMockBankAccounts(kvkId)
+        }
+        if (!kvks || kvks.length === 0) {
+            kvks = getMockKVKs()
+        }
         const accountsWithKvk = bankAccounts.map(acc => {
             const kvk = kvks.find(k => k.id === acc.kvk_id)
             return { ...acc, kvk }

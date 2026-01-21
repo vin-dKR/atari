@@ -13,7 +13,7 @@ export const Card: React.FC<CardProps> = ({
 }) => {
     return (
         <div
-            className={`bg-white rounded-xl border border-[#E0E0E0] shadow-sm transition-all duration-200 ${
+            className={`bg-[#FAF9F6] rounded-xl transition-all duration-200 ${
                 onClick
                     ? 'cursor-pointer hover:border-[#BDBDBD] hover:shadow-md'
                     : ''

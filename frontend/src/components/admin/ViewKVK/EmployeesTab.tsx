@@ -4,6 +4,7 @@ import { Staff } from '../../../types/staff'
 import { exportService } from '../../../utils/exportService'
 import { DynamicTablePage, TableColumn, ButtonOption } from '../../common/DynamicTablePage'
 import { Download, FileSpreadsheet } from 'lucide-react'
+import { getMockStaff, getMockKVKs } from '../../../mocks/kvkMockData'
 
 interface EmployeesTabProps {
     kvkId: number
@@ -18,8 +19,15 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
     }, [kvkId])
 
     const loadStaff = () => {
-        const staffList = localStorageService.getStaff(kvkId)
-        const kvks = localStorageService.getKVKDetails()
+        let staffList = localStorageService.getStaff(kvkId)
+        let kvks = localStorageService.getKVKDetails()
+
+        if (!staffList || staffList.length === 0) {
+            staffList = getMockStaff(kvkId)
+        }
+        if (!kvks || kvks.length === 0) {
+            kvks = getMockKVKs()
+        }
         const staffWithKvk = staffList.map(s => {
             const kvk = kvks.find(k => k.id === s.kvk_id)
             return { ...s, kvks: kvk }
@@ -72,13 +80,13 @@ export const EmployeesTab: React.FC<EmployeesTabProps> = ({ kvkId }) => {
             sortable: true,
             render: (value, row) => (
                 row.is_transferred === 1 ? (
-                    <span className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-xl">
-                        Transferred
-                    </span>
-                ) : (
-                    <span className="px-2 py-1 text-xs font-medium bg-[#E8F5E9] text-[#487749] rounded-xl">
-                        Active
-                    </span>
+                                                <span className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-xl">
+                                                    Transferred
+                                                </span>
+                                            ) : (
+                                                <span className="px-2 py-1 text-xs font-medium bg-[#E8F5E9] text-[#487749] rounded-xl">
+                                                    Active
+                                                </span>
                 )
             ),
         },

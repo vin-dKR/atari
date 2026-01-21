@@ -96,6 +96,6 @@ const allMastersMockRegistry: Record<string, MasterMockRecord[]> = {
 }
 
 export const getAllMastersMockData = (path: string): MasterMockRecord[] => {
-  return allMastersMockRegistry[path] ? [...allMastersMockRegistry[path]] : [] 
+  return allMastersMockRegistry[path] ? [...allMastersMockRegistry[path]] : []
 }
 

@@ -122,7 +122,7 @@ export const DynamicTablePage: React.FC<DynamicTablePageProps> = ({
 
     return (
         <RouteWrapper showBreadcrumbs={showBreadcrumbs} showTabs={showTabs} showBack={showBack}>
-            <div className="space-y-6">
+            <div className="space-y-6 bg-[#FAF9F6] rounded-2xl">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
@@ -152,7 +152,7 @@ export const DynamicTablePage: React.FC<DynamicTablePageProps> = ({
                 </div>
 
                 {/* Main Content */}
-                <Card>
+                <Card className="bg-[#FAF9F6]">
                     <CardContent className="p-6">
                         {customContent ? (
                             customContent

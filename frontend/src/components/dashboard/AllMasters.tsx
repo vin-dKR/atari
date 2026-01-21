@@ -134,7 +134,7 @@ export const AllMasters: React.FC = () => {
                 if (tab) handleTabClick(tab)
             }}
         >
-            {activeTabData.component}
+                {activeTabData.component}
         </SidebarLayout>
     )
 }

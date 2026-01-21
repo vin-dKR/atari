@@ -98,7 +98,7 @@ export const FormManagement: React.FC = () => {
                 if (tab) handleTabClick(tab)
             }}
         >
-            {activeTabData.component}
+                {activeTabData.component}
         </SidebarLayout>
     )
 }

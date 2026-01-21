@@ -6,6 +6,7 @@ import { exportService } from '../../../utils/exportService'
 import { KVKDetails } from '../../../types/kvk'
 import { DynamicTablePage, TableColumn, ButtonOption } from '../../common/DynamicTablePage'
 import { Download, FileSpreadsheet } from 'lucide-react'
+import { getMockKVKs } from '../../../mocks/kvkMockData'
 
 export const KVKListView: React.FC = () => {
     const navigate = useNavigate()
@@ -20,13 +21,18 @@ export const KVKListView: React.FC = () => {
     }, [user])
 
     const loadKVKs = () => {
+        let data: KVKDetails[] = []
         if (isAdmin) {
-            const allKVKs = localStorageService.getKVKDetails()
-            setKvks(allKVKs)
+            data = localStorageService.getKVKDetails()
         } else if (user?.kvk_id) {
-            const kvksList = localStorageService.getKVKDetails(user.kvk_id)
-            setKvks(kvksList)
+            data = localStorageService.getKVKDetails(user.kvk_id)
         }
+
+        if (!data || data.length === 0) {
+            data = getMockKVKs()
+        }
+
+        setKvks(data)
     }
 
     const handleDelete = (kvk: KVKDetails) => {

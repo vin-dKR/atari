@@ -979,7 +979,6 @@ export const aboutKvkRoutes: RouteConfig[] = [
         siblings: [
             '/forms/about-kvk/bank-account',
             '/forms/about-kvk/employee-details',
-            '/forms/about-kvk/details',
             '/forms/about-kvk/staff-transferred',
             '/forms/about-kvk/infrastructure',
         ],
@@ -994,7 +993,6 @@ export const aboutKvkRoutes: RouteConfig[] = [
         siblings: [
             '/forms/about-kvk/bank-account',
             '/forms/about-kvk/employee-details',
-            '/forms/about-kvk/details',
             '/forms/about-kvk/staff-transferred',
             '/forms/about-kvk/infrastructure',
         ],
@@ -1009,7 +1007,6 @@ export const aboutKvkRoutes: RouteConfig[] = [
         siblings: [
             '/forms/about-kvk/bank-account',
             '/forms/about-kvk/employee-details',
-            '/forms/about-kvk/details',
             '/forms/about-kvk/staff-transferred',
             '/forms/about-kvk/infrastructure',
         ],
@@ -1024,7 +1021,6 @@ export const aboutKvkRoutes: RouteConfig[] = [
         siblings: [
             '/forms/about-kvk/bank-account',
             '/forms/about-kvk/employee-details',
-            '/forms/about-kvk/details',
             '/forms/about-kvk/staff-transferred',
             '/forms/about-kvk/infrastructure',
         ],
@@ -1039,7 +1035,6 @@ export const aboutKvkRoutes: RouteConfig[] = [
         siblings: [
             '/forms/about-kvk/bank-account',
             '/forms/about-kvk/employee-details',
-            '/forms/about-kvk/details',
             '/forms/about-kvk/staff-transferred',
             '/forms/about-kvk/infrastructure',
         ],
@@ -1135,6 +1130,8 @@ export const viewKvkRoutes: RouteConfig[] = [
             '/forms/about-kvk/view-kvks/:id',
             '/forms/about-kvk/view-kvks/:id/bank',
             '/forms/about-kvk/view-kvks/:id/employees',
+            '/forms/about-kvk/view-kvks/:id/vehicles',
+            '/forms/about-kvk/view-kvks/:id/equipments',
         ],
     },
     {
@@ -1148,6 +1145,8 @@ export const viewKvkRoutes: RouteConfig[] = [
             '/forms/about-kvk/view-kvks/:id',
             '/forms/about-kvk/view-kvks/:id/bank',
             '/forms/about-kvk/view-kvks/:id/employees',
+            '/forms/about-kvk/view-kvks/:id/vehicles',
+            '/forms/about-kvk/view-kvks/:id/equipments',
         ],
     },
     {
@@ -1161,6 +1160,38 @@ export const viewKvkRoutes: RouteConfig[] = [
             '/forms/about-kvk/view-kvks/:id',
             '/forms/about-kvk/view-kvks/:id/bank',
             '/forms/about-kvk/view-kvks/:id/employees',
+            '/forms/about-kvk/view-kvks/:id/vehicles',
+            '/forms/about-kvk/view-kvks/:id/equipments',
+        ],
+    },
+    {
+        path: '/forms/about-kvk/view-kvks/:id/vehicles',
+        title: 'Vehicles',
+        description: 'Vehicle details',
+        category: 'Form Management',
+        subcategory: 'About KVK',
+        parent: '/forms/about-kvk/view-kvks/:id',
+        siblings: [
+            '/forms/about-kvk/view-kvks/:id',
+            '/forms/about-kvk/view-kvks/:id/bank',
+            '/forms/about-kvk/view-kvks/:id/employees',
+            '/forms/about-kvk/view-kvks/:id/vehicles',
+            '/forms/about-kvk/view-kvks/:id/equipments',
+        ],
+    },
+    {
+        path: '/forms/about-kvk/view-kvks/:id/equipments',
+        title: 'Equipments',
+        description: 'Equipment details',
+        category: 'Form Management',
+        subcategory: 'About KVK',
+        parent: '/forms/about-kvk/view-kvks/:id',
+        siblings: [
+            '/forms/about-kvk/view-kvks/:id',
+            '/forms/about-kvk/view-kvks/:id/bank',
+            '/forms/about-kvk/view-kvks/:id/employees',
+            '/forms/about-kvk/view-kvks/:id/vehicles',
+            '/forms/about-kvk/view-kvks/:id/equipments',
         ],
     },
 ]

@@ -55,7 +55,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
     if (tabs.length <= 1) return null
 
     return (
-        <div className={`relative ${className}`}>
+        <div className={`relative px-6 pb-2 ${className}`}>
             {/* Left scroll button */}
             {showLeftArrow && (
                 <button
