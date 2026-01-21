@@ -19,6 +19,7 @@ export const StaffList: React.FC = () => {
     const [exporting, setExporting] = useState(false)
 
     const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
+    const isTransferredPage = location.pathname.includes('staff-transferred')
 
     // Determine the add path based on current location
     const getAddPath = () => {
@@ -38,11 +39,18 @@ export const StaffList: React.FC = () => {
                 searchQuery,
                 isAdmin ? undefined : user?.kvk_id
             )
-            setFilteredStaff(filtered)
+            setFilteredStaff(applyTransferredFilter(filtered))
         } else {
-            setFilteredStaff(staff)
+            setFilteredStaff(applyTransferredFilter(staff))
         }
-    }, [searchQuery, staff, user, isAdmin])
+    }, [searchQuery, staff, user, isAdmin, isTransferredPage])
+
+    const applyTransferredFilter = (list: Staff[]) => {
+        if (isTransferredPage) {
+            return list.filter(s => s.is_transferred === 1)
+        }
+        return list.filter(s => s.is_transferred === 0)
+    }
 
     const loadStaff = () => {
         // For admin/super_admin, show all staff
@@ -56,11 +64,11 @@ export const StaffList: React.FC = () => {
                 return { ...s, kvks: kvk }
             })
             setStaff(staffWithKvk)
-            setFilteredStaff(staffWithKvk)
+            setFilteredStaff(applyTransferredFilter(staffWithKvk))
         } else if (user?.kvk_id) {
             const staffList = localStorageService.getStaff(user.kvk_id)
             setStaff(staffList)
-            setFilteredStaff(staffList)
+            setFilteredStaff(applyTransferredFilter(staffList))
         }
     }
 
@@ -139,7 +147,7 @@ export const StaffList: React.FC = () => {
                                 <FileSpreadsheet className="w-4 h-4 mr-2 shrink-0" />
                                 <span>Export Excel</span>
                             </Button>
-                            {!isAdmin && (
+                            {!isAdmin && !isTransferredPage && (
                                 <Button
                                     variant="primary"
                                     size="sm"
@@ -198,7 +206,7 @@ export const StaffList: React.FC = () => {
                                         <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                             Job Type
                                         </th>
-                                        {!isAdmin && (
+                                        {!isAdmin && !isTransferredPage && (
                                             <th className="px-4 py-3 text-left text-sm font-semibold text-[#487749]">
                                                 Actions
                                             </th>
@@ -234,7 +242,7 @@ export const StaffList: React.FC = () => {
                                             <td className="px-4 py-3 text-[#212121]">
                                                 {member.job_type}
                                             </td>
-                                            {!isAdmin && (
+                                            {!isAdmin && !isTransferredPage && (
                                                 <td className="px-4 py-3">
                                                 <div className="flex gap-2">
                                                     <button

@@ -91,7 +91,8 @@ export const ViewKVKDetails: React.FC<ViewKVKDetailsProps> = ({ onEdit }) => {
                         <h2 className="text-2xl font-bold text-[#487749]">
                             KVK Details
                         </h2>
-                        {!isEditing && (
+                        {/* Only KVK users can edit; admin/super_admin see read-only details */}
+                        {!isEditing && `${user?.role}` === 'kvk_user' && (
                             <Button
                                 variant="outline"
                                 size="sm"

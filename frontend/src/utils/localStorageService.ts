@@ -6,7 +6,46 @@ const STORAGE_KEYS = {
     KVK_DETAILS: 'atari-kvk-details',
     BANK_ACCOUNTS: 'atari-bank-accounts',
     STAFF: 'atari-staff',
+    VEHICLES: 'atari-vehicles',
+    EQUIPMENTS: 'atari-equipments',
+    INFRASTRUCTURE: 'atari-infrastructure',
     KVK_USER_MAPPING: 'atari-kvk-user-mapping',
+}
+
+export interface VehicleRecord {
+    id: number
+    kvk_name: string
+    vehicle_name: string
+    registration_no: string
+    year: number
+    total_run: number
+    status: string
+    deleted_at?: string | null
+}
+
+export interface EquipmentRecord {
+    id: number
+    kvk_name: string
+    equipment_name: string
+    year: number
+    total_cost?: number
+    source_of_fund?: string
+    status: string
+    deleted_at?: string | null
+}
+
+export interface InfrastructureRecord {
+    id: number
+    kvk_name: string
+    infrastructure: string
+    not_started: string
+    plinth: string
+    lintel: string
+    roof: string
+    total_completed: string
+    plinth_area: string
+    under_use: string
+    deleted_at?: string | null
 }
 
 export const localStorageService = {
@@ -182,5 +221,129 @@ export const localStorageService = {
         if (!localStorage.getItem(STORAGE_KEYS.STAFF)) {
             localStorage.setItem(STORAGE_KEYS.STAFF, JSON.stringify(staff))
         }
+    },
+
+    // Initialize About KVK mock data for newly added modules
+    initializeAboutKvkMockData: (
+        vehicles: VehicleRecord[],
+        equipments: EquipmentRecord[],
+        infrastructure: InfrastructureRecord[],
+    ): void => {
+        if (!localStorage.getItem(STORAGE_KEYS.VEHICLES)) {
+            localStorage.setItem(STORAGE_KEYS.VEHICLES, JSON.stringify(vehicles))
+        }
+        if (!localStorage.getItem(STORAGE_KEYS.EQUIPMENTS)) {
+            localStorage.setItem(STORAGE_KEYS.EQUIPMENTS, JSON.stringify(equipments))
+        }
+        if (!localStorage.getItem(STORAGE_KEYS.INFRASTRUCTURE)) {
+            localStorage.setItem(STORAGE_KEYS.INFRASTRUCTURE, JSON.stringify(infrastructure))
+        }
+    },
+
+    // Vehicles (list/detail shared schema)
+    getVehiclesList: (): VehicleRecord[] => {
+        const data = localStorage.getItem(STORAGE_KEYS.VEHICLES)
+        if (!data) return []
+        return JSON.parse(data).filter((v: VehicleRecord) => !v.deleted_at)
+    },
+
+    saveVehicle: (vehicle: VehicleRecord): void => {
+        const existing = localStorageService.getVehiclesList()
+        const newVehicle: VehicleRecord = {
+            ...vehicle,
+            id: vehicle.id || Date.now(),
+            // total_run default to 0 if missing
+            total_run: vehicle.total_run ?? 0,
+        }
+        const updated = [...existing, newVehicle]
+        localStorage.setItem(STORAGE_KEYS.VEHICLES, JSON.stringify(updated))
+    },
+
+    updateVehicle: (id: number, updates: Partial<VehicleRecord>): void => {
+        const data = localStorage.getItem(STORAGE_KEYS.VEHICLES)
+        if (!data) return
+        const vehicles: VehicleRecord[] = JSON.parse(data)
+        const idx = vehicles.findIndex(v => v.id === id)
+        if (idx !== -1) {
+            vehicles[idx] = {
+                ...vehicles[idx],
+                ...updates,
+            }
+            localStorage.setItem(STORAGE_KEYS.VEHICLES, JSON.stringify(vehicles))
+        }
+    },
+
+    deleteVehicle: (id: number): void => {
+        localStorageService.updateVehicle(id, { deleted_at: new Date().toISOString() })
+    },
+
+    // Equipments
+    getEquipmentsList: (): EquipmentRecord[] => {
+        const data = localStorage.getItem(STORAGE_KEYS.EQUIPMENTS)
+        if (!data) return []
+        return JSON.parse(data).filter((e: EquipmentRecord) => !e.deleted_at)
+    },
+
+    saveEquipment: (equipment: EquipmentRecord): void => {
+        const existing = localStorageService.getEquipmentsList()
+        const newItem: EquipmentRecord = {
+            ...equipment,
+            id: equipment.id || Date.now(),
+        }
+        const updated = [...existing, newItem]
+        localStorage.setItem(STORAGE_KEYS.EQUIPMENTS, JSON.stringify(updated))
+    },
+
+    updateEquipment: (id: number, updates: Partial<EquipmentRecord>): void => {
+        const data = localStorage.getItem(STORAGE_KEYS.EQUIPMENTS)
+        if (!data) return
+        const equipments: EquipmentRecord[] = JSON.parse(data)
+        const idx = equipments.findIndex(e => e.id === id)
+        if (idx !== -1) {
+            equipments[idx] = {
+                ...equipments[idx],
+                ...updates,
+            }
+            localStorage.setItem(STORAGE_KEYS.EQUIPMENTS, JSON.stringify(equipments))
+        }
+    },
+
+    deleteEquipment: (id: number): void => {
+        localStorageService.updateEquipment(id, { deleted_at: new Date().toISOString() })
+    },
+
+    // Infrastructure
+    getInfrastructureList: (): InfrastructureRecord[] => {
+        const data = localStorage.getItem(STORAGE_KEYS.INFRASTRUCTURE)
+        if (!data) return []
+        return JSON.parse(data).filter((e: InfrastructureRecord) => !e.deleted_at)
+    },
+
+    saveInfrastructure: (record: InfrastructureRecord): void => {
+        const existing = localStorageService.getInfrastructureList()
+        const newItem: InfrastructureRecord = {
+            ...record,
+            id: record.id || Date.now(),
+        }
+        const updated = [...existing, newItem]
+        localStorage.setItem(STORAGE_KEYS.INFRASTRUCTURE, JSON.stringify(updated))
+    },
+
+    updateInfrastructure: (id: number, updates: Partial<InfrastructureRecord>): void => {
+        const data = localStorage.getItem(STORAGE_KEYS.INFRASTRUCTURE)
+        if (!data) return
+        const infra: InfrastructureRecord[] = JSON.parse(data)
+        const idx = infra.findIndex(e => e.id === id)
+        if (idx !== -1) {
+            infra[idx] = {
+                ...infra[idx],
+                ...updates,
+            }
+            localStorage.setItem(STORAGE_KEYS.INFRASTRUCTURE, JSON.stringify(infra))
+        }
+    },
+
+    deleteInfrastructure: (id: number): void => {
+        localStorageService.updateInfrastructure(id, { deleted_at: new Date().toISOString() })
     },
 }

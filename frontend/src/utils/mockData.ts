@@ -2,6 +2,7 @@ import { KVKDetails } from '../types/kvk'
 import { BankAccount } from '../types/bankAccount'
 import { Staff } from '../types/staff'
 import { localStorageService } from './localStorageService'
+import { mockVehicleDetails, mockEquipmentDetails, mockInfrastructureList } from '../mocks/kvkMockData'
 
 // Mock KVK Data
 export const mockKVKData: KVKDetails[] = [
@@ -261,6 +262,12 @@ export const mockStaff: Staff[] = [
 // Initialize mock data
 export const initializeMockData = () => {
     localStorageService.initializeMockData(mockKVKData, mockBankAccounts, mockStaff)
+    // Seed About KVK new modules on first run (if keys not present)
+    localStorageService.initializeAboutKvkMockData(
+        mockVehicleDetails as any,
+        mockEquipmentDetails as any,
+        mockInfrastructureList as any
+    )
 
     // Set up KVK user mapping
     const mapping: Record<string, number> = {
