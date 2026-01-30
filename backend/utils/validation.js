@@ -79,9 +79,44 @@ function validateRoleId(roleId) {
   return typeof roleId === 'number' && validRoleIds.includes(roleId);
 }
 
+/**
+ * Validate phone number (Indian format)
+ * @param {string} phoneNumber - Phone number to validate
+ * @returns {object} { valid: boolean, errors: string[] }
+ */
+function validatePhoneNumber(phoneNumber) {
+  const errors = [];
+
+  if (!phoneNumber) {
+    // Phone number is optional
+    return { valid: true, errors: [] };
+  }
+
+  if (typeof phoneNumber !== 'string') {
+    errors.push('Phone number must be a string');
+    return { valid: false, errors };
+  }
+
+  // Remove spaces, dashes, and common separators
+  const cleaned = phoneNumber.replace(/[\s\-()]/g, '');
+
+  // Check if it's a valid Indian phone number (10 digits, starting with 6-9)
+  const phoneRegex = /^[6-9]\d{9}$/;
+  
+  if (!phoneRegex.test(cleaned)) {
+    errors.push('Phone number must be a valid 10-digit Indian mobile number starting with 6-9');
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
 module.exports = {
   validateEmail,
   validatePassword,
   sanitizeInput,
   validateRoleId,
+  validatePhoneNumber,
 };

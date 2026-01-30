@@ -1,6 +1,6 @@
 const userRepository = require('../repositories/userRepository');
 const { hashPassword } = require('../utils/password');
-const { validateEmail, validatePassword, validateRoleId, sanitizeInput } = require('../utils/validation');
+const { validateEmail, validatePassword, validateRoleId, sanitizeInput, validatePhoneNumber } = require('../utils/validation');
 const prisma = require('../config/prisma');
 
 /**
@@ -37,6 +37,14 @@ const userManagementService = {
       throw new Error('Invalid role ID');
     }
 
+    // Validate phone number (optional)
+    if (userData.phoneNumber) {
+      const phoneValidation = validatePhoneNumber(userData.phoneNumber);
+      if (!phoneValidation.valid) {
+        throw new Error(phoneValidation.errors.join(', '));
+      }
+    }
+
     // Check if email already exists
     const existingUser = await userRepository.findByEmail(userData.email);
     if (existingUser) {
@@ -57,6 +65,7 @@ const userManagementService = {
     const sanitizedData = {
       name: sanitizeInput(userData.name),
       email: userData.email.toLowerCase().trim(),
+      phoneNumber: userData.phoneNumber ? userData.phoneNumber.replace(/[\s\-()]/g, '') : null,
       roleId: userData.roleId,
       zoneId: userData.zoneId || null,
       stateId: userData.stateId || null,
@@ -75,6 +84,7 @@ const userManagementService = {
       userId: user.userId,
       name: user.name,
       email: user.email,
+      phoneNumber: user.phoneNumber,
       roleId: user.roleId,
       roleName: user.role.roleName,
       zoneId: user.zoneId,

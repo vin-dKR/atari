@@ -99,7 +99,24 @@ const userManagementController = {
         filters,
       );
 
-      res.status(200).json(users);
+      // Map to safe response: flat roleName, include phoneNumber, exclude passwordHash and nested role
+      const safeUsers = users.map((u) => ({
+        userId: u.userId,
+        name: u.name,
+        email: u.email,
+        phoneNumber: u.phoneNumber ?? null,
+        roleId: u.roleId,
+        roleName: u.role?.roleName ?? null,
+        zoneId: u.zoneId,
+        stateId: u.stateId,
+        districtId: u.districtId,
+        orgId: u.orgId,
+        kvkId: u.kvkId,
+        createdAt: u.createdAt,
+        lastLoginAt: u.lastLoginAt,
+      }));
+
+      res.status(200).json(safeUsers);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

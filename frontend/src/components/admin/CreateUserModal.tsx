@@ -26,6 +26,7 @@ interface CreateUserModalProps {
 interface FormData {
     name: string
     email: string
+    phoneNumber: string
     password: string
     confirmPassword: string
     roleId: number | ''
@@ -39,6 +40,7 @@ interface FormData {
 interface FormErrors {
     name?: string
     email?: string
+    phoneNumber?: string
     password?: string
     confirmPassword?: string
     roleId?: string
@@ -57,6 +59,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
     const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
+        phoneNumber: '',
         password: '',
         confirmPassword: '',
         roleId: '',
@@ -80,6 +83,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             setFormData({
                 name: '',
                 email: '',
+                phoneNumber: '',
                 password: '',
                 confirmPassword: '',
                 roleId: '',
@@ -131,6 +135,14 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             newErrors.email = 'Email is required'
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             newErrors.email = 'Invalid email format'
+        }
+
+        // Phone number validation (optional)
+        if (formData.phoneNumber.trim()) {
+            const cleaned = formData.phoneNumber.replace(/[\s\-()]/g, '')
+            if (!/^[6-9]\d{9}$/.test(cleaned)) {
+                newErrors.phoneNumber = 'Invalid phone number (10 digits starting with 6-9)'
+            }
         }
 
         // Password validation
@@ -211,6 +223,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             const userData: CreateUserData = {
                 name: formData.name.trim(),
                 email: formData.email.trim().toLowerCase(),
+                phoneNumber: formData.phoneNumber.trim() || null,
                 password: formData.password,
                 roleId: formData.roleId as number,
                 zoneId: formData.zoneId ? (formData.zoneId as number) : null,
@@ -282,6 +295,17 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                     placeholder="user@example.com"
                     required
                     error={errors.email}
+                    disabled={isSubmitting || submitSuccess}
+                />
+
+                {/* Phone Number */}
+                <Input
+                    label="Phone Number (Optional)"
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={e => handleChange('phoneNumber', e.target.value)}
+                    placeholder="9876543210"
+                    error={errors.phoneNumber}
                     disabled={isSubmitting || submitSuccess}
                 />
 

@@ -25,6 +25,7 @@ interface User {
     userId: number
     name: string
     email: string
+    phoneNumber?: string | null
     roleId: number
     roleName: string
     zoneId?: number | null
@@ -205,6 +206,9 @@ export const UserManagement: React.FC = () => {
                                         Email
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-[#487749] uppercase tracking-wider">
+                                        Phone
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#487749] uppercase tracking-wider">
                                         Role
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-semibold text-[#487749] uppercase tracking-wider">
@@ -237,8 +241,13 @@ export const UserManagement: React.FC = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-[#757575]">
+                                                {user.phoneNumber || '—'}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             <span className="px-2 py-1 text-xs font-medium rounded-lg bg-[#E8F5E9] text-[#487749]">
-                                                {ROLE_MAP[user.roleName]?.label || user.roleName}
+                                                {ROLE_MAP[user.roleName]?.label ?? user.roleName ?? '—'}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#757575]">
