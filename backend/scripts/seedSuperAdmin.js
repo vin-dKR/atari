@@ -53,7 +53,7 @@ async function seedSuperAdmin() {
         output: process.stdout,
       });
 
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         rl.question('Do you want to create another super admin? (y/N): ', async (answer) => {
           rl.close();
           
@@ -64,8 +64,12 @@ async function seedSuperAdmin() {
           }
 
           // Continue with creation
-          await createSuperAdmin(defaultEmail, defaultPassword, defaultName, superAdminRole.roleId);
-          resolve();
+          try {
+            await createSuperAdmin(defaultEmail, defaultPassword, defaultName, superAdminRole.roleId);
+            resolve()
+          } catch(err) {
+            reject(err)
+          }
         });
       });
     }
