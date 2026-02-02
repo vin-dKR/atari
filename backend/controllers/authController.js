@@ -17,10 +17,11 @@ const authController = {
       const result = await authService.login(email, password);
 
       // Set HTTP-only cookies for tokens
+      const isProduction = process.env.NODE_ENV === 'production';
       const cookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-        sameSite: 'strict', // CSRF protection
+        secure: isProduction, // HTTPS only in production
+        sameSite: isProduction ? 'none' : 'lax', // Allow cross-domain in prod
         maxAge: 60 * 60 * 1000, // 1 hour for access token
         path: '/',
       };
@@ -57,10 +58,11 @@ const authController = {
       const result = await authService.refreshAccessToken(refreshToken);
 
       // Set new access token cookie
+      const isProduction = process.env.NODE_ENV === 'production';
       const cookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         maxAge: 60 * 60 * 1000, // 1 hour
         path: '/',
       };
