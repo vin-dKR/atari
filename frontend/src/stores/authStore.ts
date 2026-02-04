@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { User, UserRole, LoginCredentials } from '../types/auth'
+import { User, UserRole, PermissionAction, LoginCredentials } from '../types/auth'
 import { authApi, ApiUser } from '../services/authApi'
 
 interface AuthState {
@@ -13,6 +13,8 @@ interface AuthState {
     checkAuth: () => Promise<boolean>
     refreshToken: () => Promise<boolean>
     hasRole: (role: UserRole | UserRole[]) => boolean
+    /** Check granular permission (VIEW/ADD/EDIT/DELETE). No permissions array = full access. */
+    hasPermission: (action: PermissionAction) => boolean
     clearError: () => void
 }
 
@@ -32,6 +34,7 @@ const mapApiUserToUser = (apiUser: ApiUser): User => ({
     kvkId: apiUser.kvkId,
     createdAt: apiUser.createdAt,
     lastLoginAt: apiUser.lastLoginAt,
+    permissions: apiUser.permissions,
 })
 
 export const useAuthStore = create<AuthState>()(
@@ -157,6 +160,17 @@ export const useAuthStore = create<AuthState>()(
                     return role.includes(user.role)
                 }
                 return user.role === role
+            },
+
+            /**
+             * Check granular permission (VIEW/ADD/EDIT/DELETE).
+             * If user has no permissions array (e.g. super_admin), treat as full access.
+             */
+            hasPermission: (action: PermissionAction): boolean => {
+                const { user } = get()
+                if (!user) return false
+                if (!user.permissions || user.permissions.length === 0) return true
+                return user.permissions.includes(action)
             },
 
             /**

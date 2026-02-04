@@ -131,12 +131,19 @@ const userManagementController = {
 
   /**
    * GET /api/admin/users/:id
-   * Get a single user by ID
+   * Get a single user by ID (enforces hierarchy scope)
    */
   getUserById: async (req, res) => {
     try {
       const { id } = req.params;
-      const user = await userRepository.findById(id);
+      const userId = parseInt(id, 10);
+      if (Number.isNaN(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+      }
+
+      await userManagementService.ensureAdminCanAccessUser(req.user.userId, userId);
+
+      const user = await userRepository.findById(userId);
 
       if (!user || user.deletedAt) {
         return res.status(404).json({ error: 'User not found' });
