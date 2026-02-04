@@ -28,6 +28,14 @@ import {
     useOtherExtensionActivities,
     useEvents,
 } from '../../../hooks/useTrainingExtensionEventsData'
+import {
+    useProductCategories,
+    useProductTypes,
+    useProducts,
+    useCraCroppingSystems,
+    useCraFarmingSystems,
+    useAryaEnterprises,
+} from '../../../hooks/useProductionProjectsData'
 
 interface MasterViewProps {
     title: string
@@ -36,8 +44,8 @@ interface MasterViewProps {
     mockData?: any[]
 }
 
-// Extended entity type for OFT/FLD masters and Training/Extension/Events
-type ExtendedEntityType = EntityType | 'oft-subjects' | 'oft-thematic-areas' | 'fld-sectors' | 'fld-thematic-areas' | 'fld-categories' | 'fld-subcategories' | 'fld-crops' | 'cfld-crops' | 'training-types' | 'training-areas' | 'training-thematic-areas' | 'extension-activities' | 'other-extension-activities' | 'events'
+// Extended entity type for OFT/FLD masters and Training/Extension/Events and Production/Projects
+export type ExtendedEntityType = EntityType | 'oft-subjects' | 'oft-thematic-areas' | 'fld-sectors' | 'fld-thematic-areas' | 'fld-categories' | 'fld-subcategories' | 'fld-crops' | 'cfld-crops' | 'training-types' | 'training-areas' | 'training-thematic-areas' | 'extension-activities' | 'other-extension-activities' | 'events' | 'product-categories' | 'product-types' | 'products' | 'cra-cropping-systems' | 'cra-farming-systems' | 'arya-enterprises'
 
 // Map route paths to entity types
 const getEntityTypeFromPath = (path: string): ExtendedEntityType | null => {
@@ -65,6 +73,14 @@ const getEntityTypeFromPath = (path: string): ExtendedEntityType | null => {
     if (path === '/all-master/other-extension-activity') return 'other-extension-activities'
     if (path === '/all-master/events') return 'events'
 
+    // Production & Projects masters
+    if (path === '/all-master/product-category') return 'product-categories'
+    if (path === '/all-master/product-type') return 'product-types'
+    if (path === '/all-master/product') return 'products'
+    if (path === '/all-master/cra-croping-system') return 'cra-cropping-systems'
+    if (path === '/all-master/cra-farming-system') return 'cra-farming-systems'
+    if (path === '/all-master/arya-enterprise') return 'arya-enterprises'
+
     return null
 }
 
@@ -89,6 +105,12 @@ const getIdField = (entityType: ExtendedEntityType): string => {
         case 'extension-activities': return 'extensionActivityId'
         case 'other-extension-activities': return 'otherExtensionActivityId'
         case 'events': return 'eventId'
+        case 'product-categories': return 'productCategoryId'
+        case 'product-types': return 'productTypeId'
+        case 'products': return 'productId'
+        case 'cra-cropping-systems': return 'craCropingSystemId'
+        case 'cra-farming-systems': return 'craFarmingSystemId'
+        case 'arya-enterprises': return 'aryaEnterpriseId'
     }
 }
 
@@ -149,6 +171,20 @@ const getFieldValue = (item: any, field: string): string => {
     }
     if (field === 'eventName' && item.eventName) return item.eventName
 
+    // Production & Projects fields
+    if (field === 'productCategoryName') {
+        if (item.productCategoryName) return item.productCategoryName
+        if (item.productCategory?.productCategoryName) return item.productCategory.productCategoryName
+    }
+    if (field === 'productCategoryType') {
+        if (item.productCategoryType) return item.productCategoryType
+        if (item.productType?.productCategoryType) return item.productType.productCategoryType
+    }
+    if (field === 'productName' && item.productName) return item.productName
+    if (field === 'cropName' && item.cropName) return item.cropName
+    if (field === 'farmingSystemName' && item.farmingSystemName) return item.farmingSystemName
+    if (field === 'enterpriseName' && item.enterpriseName) return item.enterpriseName
+
     // Handle count fields from _count object
     if (field === 'thematicAreasCount' && item._count?.thematicAreas !== undefined) {
         return String(item._count.thematicAreas)
@@ -207,12 +243,19 @@ export const MasterView: React.FC<MasterViewProps> = ({
     const extensionActivitiesHook = entityType === 'extension-activities' ? useExtensionActivities() : null
     const otherExtensionActivitiesHook = entityType === 'other-extension-activities' ? useOtherExtensionActivities() : null
     const eventsHook = entityType === 'events' ? useEvents() : null
+    const productCategoriesHook = entityType === 'product-categories' ? useProductCategories() : null
+    const productTypesHook = entityType === 'product-types' ? useProductTypes() : null
+    const productsHook = entityType === 'products' ? useProducts() : null
+    const craCroppingSystemsHook = entityType === 'cra-cropping-systems' ? useCraCroppingSystems() : null
+    const craFarmingSystemsHook = entityType === 'cra-farming-systems' ? useCraFarmingSystems() : null
+    const aryaEnterprisesHook = entityType === 'arya-enterprises' ? useAryaEnterprises() : null
 
     // Get the active hook
     const activeHook = basicMasterHook || oftSubjectsHook || oftThematicAreasHook || sectorsHook ||
         fldThematicAreasHook || fldCategoriesHook || fldSubcategoriesHook ||
         fldCropsHook || cfldCropsHook || trainingTypesHook || trainingAreasHook ||
-        trainingThematicAreasHook || extensionActivitiesHook || otherExtensionActivitiesHook || eventsHook
+        trainingThematicAreasHook || extensionActivitiesHook || otherExtensionActivitiesHook || eventsHook ||
+        productCategoriesHook || productTypesHook || productsHook || craCroppingSystemsHook || craFarmingSystemsHook || aryaEnterprisesHook
 
     // Initialize items based on entity type
     const [items, setItems] = useState<any[]>(() => {

@@ -14,9 +14,13 @@ import {
     useTrainingTypes,
     useTrainingAreas,
 } from '../../../hooks/useTrainingExtensionEventsData'
+import {
+    useProductCategories,
+    useProductTypes,
+} from '../../../hooks/useProductionProjectsData'
 
-// Extended entity type for OFT/FLD masters and Training/Extension/Events
-type ExtendedEntityType = EntityType | 'oft-subjects' | 'oft-thematic-areas' | 'fld-sectors' | 'fld-thematic-areas' | 'fld-categories' | 'fld-subcategories' | 'fld-crops' | 'cfld-crops' | 'training-types' | 'training-areas' | 'training-thematic-areas' | 'extension-activities' | 'other-extension-activities' | 'events'
+// Extended entity type for OFT/FLD masters and Training/Extension/Events and Production/Projects
+type ExtendedEntityType = EntityType | 'oft-subjects' | 'oft-thematic-areas' | 'fld-sectors' | 'fld-thematic-areas' | 'fld-categories' | 'fld-subcategories' | 'fld-crops' | 'cfld-crops' | 'training-types' | 'training-areas' | 'training-thematic-areas' | 'extension-activities' | 'other-extension-activities' | 'events' | 'product-categories' | 'product-types' | 'products' | 'cra-cropping-systems' | 'cra-farming-systems' | 'arya-enterprises'
 
 interface MasterDataModalProps {
     entityType: ExtendedEntityType | null
@@ -50,6 +54,10 @@ export function MasterDataModal({
     // Training, Extension & Events master data hooks for dropdowns
     const { data: trainingTypes = [] } = useTrainingTypes()
     const { data: trainingAreas = [] } = useTrainingAreas()
+
+    // Production & Projects master data hooks for dropdowns
+    const { data: productCategories = [] } = useProductCategories()
+    const { data: productTypes = [] } = useProductTypes()
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -691,6 +699,207 @@ export function MasterDataModal({
                                 onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
                                 required
                                 placeholder="Enter event name"
+                                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                            />
+                        </div>
+                    )}
+
+                    {/* Production & Projects Masters */}
+                    {entityType === 'product-categories' && (
+                        <div>
+                            <label className="block text-sm font-medium text-[#212121] mb-2">
+                                Product Category Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.productCategoryName || ''}
+                                onChange={(e) => setFormData({ ...formData, productCategoryName: e.target.value })}
+                                required
+                                placeholder="Enter product category name"
+                                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                            />
+                        </div>
+                    )}
+
+                    {entityType === 'product-types' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Product Category <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    value={formData.productCategoryId || ''}
+                                    onChange={(e) => setFormData({ ...formData, productCategoryId: parseInt(e.target.value) })}
+                                    required
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                >
+                                    <option value="">Select category</option>
+                                    {productCategories.map((cat: any) => (
+                                        <option key={cat.productCategoryId} value={cat.productCategoryId}>
+                                            {cat.productCategoryName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Product Type <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.productCategoryType || ''}
+                                    onChange={(e) => setFormData({ ...formData, productCategoryType: e.target.value })}
+                                    required
+                                    placeholder="Enter product type"
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {entityType === 'products' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Product Category <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    value={formData.productCategoryId || ''}
+                                    onChange={(e) => {
+                                        const catId = parseInt(e.target.value)
+                                        setFormData({ ...formData, productCategoryId: catId, productTypeId: '' })
+                                    }}
+                                    required
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                >
+                                    <option value="">Select category</option>
+                                    {productCategories.map((cat: any) => (
+                                        <option key={cat.productCategoryId} value={cat.productCategoryId}>
+                                            {cat.productCategoryName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Product Type <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    value={formData.productTypeId || ''}
+                                    onChange={(e) => setFormData({ ...formData, productTypeId: parseInt(e.target.value) })}
+                                    required
+                                    disabled={!formData.productCategoryId}
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all disabled:bg-[#F5F5F5] disabled:cursor-not-allowed"
+                                >
+                                    <option value="">Select type</option>
+                                    {productTypes
+                                        .filter((type: any) => type.productCategoryId === formData.productCategoryId)
+                                        .map((type: any) => (
+                                            <option key={type.productTypeId} value={type.productTypeId}>
+                                                {type.productCategoryType}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Product Name <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.productName || ''}
+                                    onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
+                                    required
+                                    placeholder="Enter product name"
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {entityType === 'cra-cropping-systems' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Season <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    value={formData.seasonId || ''}
+                                    onChange={(e) => setFormData({ ...formData, seasonId: parseInt(e.target.value) })}
+                                    required
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                >
+                                    <option value="">Select season</option>
+                                    {seasons.map((season: any) => (
+                                        <option key={season.seasonId} value={season.seasonId}>
+                                            {season.seasonName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Crop Name <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.cropName || ''}
+                                    onChange={(e) => setFormData({ ...formData, cropName: e.target.value })}
+                                    required
+                                    placeholder="Enter crop name"
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {entityType === 'cra-farming-systems' && (
+                        <>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Season <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    value={formData.seasonId || ''}
+                                    onChange={(e) => setFormData({ ...formData, seasonId: parseInt(e.target.value) })}
+                                    required
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                >
+                                    <option value="">Select season</option>
+                                    {seasons.map((season: any) => (
+                                        <option key={season.seasonId} value={season.seasonId}>
+                                            {season.seasonName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[#212121] mb-2">
+                                    Farming System Name <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.farmingSystemName || ''}
+                                    onChange={(e) => setFormData({ ...formData, farmingSystemName: e.target.value })}
+                                    required
+                                    placeholder="Enter farming system name"
+                                    className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
+                                />
+                            </div>
+                        </>
+                    )}
+
+                    {entityType === 'arya-enterprises' && (
+                        <div>
+                            <label className="block text-sm font-medium text-[#212121] mb-2">
+                                Enterprise Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.enterpriseName || ''}
+                                onChange={(e) => setFormData({ ...formData, enterpriseName: e.target.value })}
+                                required
+                                placeholder="Enter enterprise name"
                                 className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#487749]/20 focus:border-[#487749] transition-all"
                             />
                         </div>
