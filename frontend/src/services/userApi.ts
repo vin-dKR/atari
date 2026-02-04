@@ -3,6 +3,9 @@ import { apiClient, ApiError } from './api';
 /**
  * User data for creation/update
  */
+/** Granular permission actions (when creator is not Super Admin) */
+export type PermissionAction = 'VIEW' | 'ADD' | 'EDIT' | 'DELETE';
+
 export interface CreateUserData {
   name: string;
   email: string;
@@ -14,6 +17,8 @@ export interface CreateUserData {
   districtId?: number | null;
   orgId?: number | null;
   kvkId?: number | null;
+  /** Required when creator is not Super Admin; at least one action */
+  permissions?: PermissionAction[];
 }
 
 export interface UpdateUserData {

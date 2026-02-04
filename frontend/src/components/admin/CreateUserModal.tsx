@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { userApi, CreateUserData } from '../../services/userApi'
+import { userApi, CreateUserData, PermissionAction } from '../../services/userApi'
+import { useAuthStore } from '../../stores/authStore'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 import { Modal } from '../ui/Modal'
 import { AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react'
+
+const PERMISSION_ACTIONS: { value: PermissionAction; label: string }[] = [
+    { value: 'VIEW', label: 'View' },
+    { value: 'ADD', label: 'Add' },
+    { value: 'EDIT', label: 'Edit' },
+    { value: 'DELETE', label: 'Delete' },
+]
 
 /**
  * Role mapping
@@ -35,6 +43,7 @@ interface FormData {
     districtId: number | ''
     orgId: number | ''
     kvkId: number | ''
+    permissions: PermissionAction[]
 }
 
 interface FormErrors {
@@ -49,6 +58,7 @@ interface FormErrors {
     districtId?: string
     orgId?: string
     kvkId?: string
+    permissions?: string
 }
 
 export const CreateUserModal: React.FC<CreateUserModalProps> = ({
@@ -68,7 +78,10 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
         districtId: '',
         orgId: '',
         kvkId: '',
+        permissions: [],
     })
+    const { user: currentUser } = useAuthStore()
+    const showPermissionsSection = currentUser?.role !== 'super_admin'
 
     const [errors, setErrors] = useState<FormErrors>({})
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -92,6 +105,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 districtId: '',
                 orgId: '',
                 kvkId: '',
+                permissions: [],
             })
             setErrors({})
             setSubmitError(null)
@@ -183,6 +197,10 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
             newErrors.kvkId = 'KVK is required for KVK user'
         }
 
+        if (showPermissionsSection && (!formData.permissions || formData.permissions.length === 0)) {
+            newErrors.permissions = 'Select at least one permission (View, Add, Edit, or Delete)'
+        }
+
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
@@ -231,6 +249,9 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                 districtId: formData.districtId ? (formData.districtId as number) : null,
                 orgId: formData.orgId ? (formData.orgId as number) : null,
                 kvkId: formData.kvkId ? (formData.kvkId as number) : null,
+            }
+            if (showPermissionsSection && formData.permissions.length > 0) {
+                userData.permissions = formData.permissions
             }
 
             await userApi.createUser(userData)
@@ -395,6 +416,51 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({
                         </p>
                     )}
                 </div>
+
+                {/* Permissions for this user (when creator is not Super Admin) */}
+                {showPermissionsSection && (
+                    <div>
+                        <p className="block text-sm font-medium text-[#487749] mb-2">
+                            Permissions for this user <span className="text-red-500">*</span>
+                        </p>
+                        <p className="text-xs text-[#757575] mb-3">
+                            Select at least one permission. The user will only be able to perform the selected actions.
+                        </p>
+                        <div className="flex flex-wrap gap-4">
+                            {PERMISSION_ACTIONS.map(({ value, label }) => (
+                                <label
+                                    key={value}
+                                    className="flex items-center gap-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.permissions.includes(value)}
+                                        onChange={e => {
+                                            const checked = e.target.checked
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                permissions: checked
+                                                    ? [...prev.permissions, value]
+                                                    : prev.permissions.filter(p => p !== value),
+                                            }))
+                                            if (errors.permissions) {
+                                                setErrors(prev => ({ ...prev, permissions: undefined }))
+                                            }
+                                        }}
+                                        disabled={isSubmitting || submitSuccess}
+                                        className="w-4 h-4 rounded border-[#BDBDBD] text-[#487749] focus:ring-[#487749]"
+                                    />
+                                    <span className="text-sm text-[#212121]">{label}</span>
+                                </label>
+                            ))}
+                        </div>
+                        {errors.permissions && (
+                            <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
+                                {errors.permissions}
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 {/* Hierarchy Fields - Shown based on role */}
                 {showZoneField && (
