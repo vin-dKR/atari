@@ -1,5 +1,6 @@
 const { verifyToken } = require('../utils/jwt.js');
 const prisma = require('../config/prisma.js');
+const userPermissionRepository = require('../repositories/userPermissionRepository.js');
 
 /**
  * Middleware to authenticate JWT token from HTTP-only cookie
@@ -87,25 +88,45 @@ function requireRole(allowedRoles) {
 }
 
 /**
- * Middleware to require specific permission
+ * Middleware to require specific permission.
+ * Checks user-level permissions (UserPermission) first; if the user has any user-level
+ * permissions, only those actions are allowed. Otherwise falls back to role-based permissions.
  * @param {string} moduleCode - Module code (e.g., 'user_management')
  * @param {string} action - Permission action (VIEW, ADD, EDIT, DELETE)
  * @returns {Function} Express middleware function
  */
 function requirePermission(moduleCode, action) {
+  const normalizedAction = action.toUpperCase();
+
   return async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentication required' });
     }
 
     try {
-      // Find the module
+      const userId = req.user.userId;
+
+      // 1. Check user-level permissions first (granular permissions from admin-created users)
+      const userActions = await userPermissionRepository.getUserPermissionActions(userId);
+
+      if (userActions.length > 0) {
+        // User has user-level permissions: allow only those actions (no role fallback)
+        if (userActions.includes(normalizedAction)) {
+          return next();
+        }
+        return res.status(403).json({
+          error: 'Insufficient permissions',
+          message: `You don't have permission to ${normalizedAction} in ${moduleCode}`,
+        });
+      }
+
+      // 2. No user-level permissions: fall back to role-based check
       const module = await prisma.module.findUnique({
         where: { moduleCode },
         include: {
           permissions: {
             where: {
-              action: action.toUpperCase(),
+              action: normalizedAction,
             },
             include: {
               rolePermissions: {
@@ -122,7 +143,6 @@ function requirePermission(moduleCode, action) {
         return res.status(404).json({ error: 'Module not found' });
       }
 
-      // Check if user's role has the required permission
       const hasPermission = module.permissions.some(
         (permission) => permission.rolePermissions.length > 0
       );
@@ -130,7 +150,7 @@ function requirePermission(moduleCode, action) {
       if (!hasPermission) {
         return res.status(403).json({
           error: 'Insufficient permissions',
-          message: `You don't have permission to ${action} in ${moduleCode}`,
+          message: `You don't have permission to ${normalizedAction} in ${moduleCode}`,
         });
       }
 
