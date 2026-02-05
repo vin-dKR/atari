@@ -31,17 +31,22 @@ router.put('/users/:id', strictRateLimiter, requirePermission(USER_MANAGEMENT_MO
 router.delete('/users/:id', strictRateLimiter, requirePermission(USER_MANAGEMENT_MODULE, 'DELETE'), userManagementController.deleteUser);
 
 // Get all roles (for dropdowns)
-router.get('/roles', apiRateLimiter, async (_req, res) => {
-  try {
-    const roles = await prisma.role.findMany({
-      select: { roleId: true, roleName: true, description: true },
-      orderBy: { roleId: 'asc' },
-    });
-    res.json(roles);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch roles' });
-  }
-});
+router.get(
+  '/roles',
+  apiRateLimiter,
+  requirePermission(USER_MANAGEMENT_MODULE, 'VIEW'),
+  async (_req, res) => {
+    try {
+      const roles = await prisma.role.findMany({
+        select: { roleId: true, roleName: true, description: true },
+        orderBy: { roleId: 'asc' },
+      });
+      res.json(roles);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch roles' });
+    }
+  },
+);
 
 module.exports = router;
 

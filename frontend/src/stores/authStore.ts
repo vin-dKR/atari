@@ -164,12 +164,25 @@ export const useAuthStore = create<AuthState>()(
 
             /**
              * Check granular permission (VIEW/ADD/EDIT/DELETE).
-             * If user has no permissions array (e.g. super_admin), treat as full access.
+             * Fail closed for empty arrays; treat explicit admin roles as full access.
              */
             hasPermission: (action: PermissionAction): boolean => {
                 const { user } = get()
                 if (!user) return false
-                if (!user.permissions || user.permissions.length === 0) return true
+
+                // Explicit admin roles always have full access
+                if (
+                    user.role === 'super_admin' ||
+                    user.role === 'zone_admin' ||
+                    user.role === 'state_admin' ||
+                    user.role === 'district_admin' ||
+                    user.role === 'org_admin'
+                ) {
+                    return true
+                }
+
+                // Non-admins: require explicit permission; empty/undefined = no access
+                if (!user.permissions || user.permissions.length === 0) return false
                 return user.permissions.includes(action)
             },
 

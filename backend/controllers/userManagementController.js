@@ -136,8 +136,8 @@ const userManagementController = {
   getUserById: async (req, res) => {
     try {
       const { id } = req.params;
-      const userId = parseInt(id, 10);
-      if (Number.isNaN(userId)) {
+      const userId = Number(id);
+      if (Number.isNaN(userId) || !Number.isInteger(userId)) {
         return res.status(400).json({ error: 'Invalid user ID' });
       }
 
@@ -181,7 +181,10 @@ const userManagementController = {
     try {
       const { id } = req.params;
       const updatedBy = req.user.userId;
-      const userId = parseInt(id, 10);
+      const userId = Number(id);
+      if (Number.isNaN(userId) || !Number.isInteger(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+      }
 
       const updatedUser = await userManagementService.updateUser(
         userId,
@@ -203,7 +206,10 @@ const userManagementController = {
     try {
       const { id } = req.params;
       const deletedBy = req.user.userId;
-      const userId = parseInt(id, 10);
+      const userId = Number(id);
+      if (Number.isNaN(userId) || !Number.isInteger(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+      }
 
       await userManagementService.deleteUser(userId, deletedBy);
 

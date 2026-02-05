@@ -61,6 +61,20 @@ async function seedGlobalPermissions() {
       where: { roleName: { in: adminRoleNames } },
       select: { roleId: true, roleName: true },
     });
+
+    const foundRoleNames = adminRoles.map((r) => r.roleName);
+    const missingRoles = adminRoleNames.filter((name) => !foundRoleNames.includes(name));
+
+    if (missingRoles.length > 0) {
+      console.warn(
+        `⚠️  The following admin roles were not found in the database and will not receive USER_SCOPE permissions: ${missingRoles.join(
+          ', ',
+        )}`,
+      );
+      // Uncomment the next line if you prefer to fail hard instead of warning:
+      // throw new Error(`Missing required admin roles: ${missingRoles.join(', ')}`);
+    }
+
     for (const role of adminRoles) {
       for (const action of PERMISSION_ACTIONS) {
         const permissionId = permissionIds[action];

@@ -14,6 +14,7 @@ export const KVKListView: React.FC = () => {
     const [kvks, setKvks] = useState<KVKDetails[]>([])
     const [exporting, setExporting] = useState(false)
 
+    const canView = hasPermission('VIEW')
     const canEdit = hasPermission('EDIT')
     const canDelete = hasPermission('DELETE')
     const isAdmin = user?.role === 'super_admin' || user?.role === 'zone_admin' || user?.role === 'state_admin' || user?.role === 'district_admin' || user?.role === 'org_admin'
@@ -115,7 +116,7 @@ export const KVKListView: React.FC = () => {
             columns={columns}
             data={kvks}
             buttonOptions={buttonOptions}
-            onView={isAdmin ? handleView : undefined}
+            onView={canView ? handleView : undefined}
             onEdit={canEdit ? handleEdit : undefined}
             onDelete={canDelete ? handleDelete : undefined}
             searchPlaceholder="Search by KVK name, email, mobile, state, district..."
