@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
     Building2,
@@ -63,9 +63,8 @@ export const FormManagement: React.FC = () => {
     }, [location.pathname, navigate])
 
     // Determine active tab based on current route
-    const getActiveTab = () => {
+    const getActiveTab = (): string => {
         const currentPath = location.pathname
-        // Match any /forms/* path to the appropriate tab
         if (currentPath.startsWith('/forms/about-kvk')) return 'about-kvk'
         if (currentPath.startsWith('/forms/achievements')) return 'achievements'
         if (currentPath.startsWith('/forms/performance')) return 'performance'
@@ -73,32 +72,16 @@ export const FormManagement: React.FC = () => {
         return tabs[0].id
     }
 
-    const [activeTab, setActiveTab] = useState<string>(getActiveTab())
-
-    // Update active tab when route changes
-    React.useEffect(() => {
-        setActiveTab(getActiveTab())
-    }, [location.pathname])
-
-    const handleTabClick = (tab: Tab) => {
-        setActiveTab(tab.id)
-        navigate(tab.path)
-    }
-
-    const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
+    const activeTabData = tabs.find(tab => tab.id === getActiveTab()) || tabs[0]
 
     return (
         <SidebarLayout
             title="Form Management"
             description="Manage KVK forms, achievements, performance indicators, and miscellaneous data"
-            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, icon: tab.icon }))}
-            activeTab={activeTab}
-            onTabClick={(tabId) => {
-                const tab = tabs.find(t => t.id === tabId)
-                if (tab) handleTabClick(tab)
-            }}
+            hideTabs={true}
         >
-                {activeTabData.component}
+            {activeTabData.component}
         </SidebarLayout>
     )
 }
+

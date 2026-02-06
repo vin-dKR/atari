@@ -18,6 +18,12 @@ import {
     Target,
     History,
     FileBarChart,
+    Database,
+    Folder,
+    ClipboardList,
+    Building2,
+    Briefcase,
+    FileCheck,
 } from 'lucide-react'
 
 interface MenuItem {
@@ -25,9 +31,10 @@ interface MenuItem {
     path: string
     icon: React.ReactNode
     children?: MenuItem[]
+    dropdown?: boolean // If true, show children as dropdown in sidebar and hide tabs on page
 }
 
-// Super Admin menu items - Optimized and flattened structure
+// Super Admin menu items with dropdown support
 const superAdminMenuItems: MenuItem[] = [
     {
         label: 'Dashboard',
@@ -37,7 +44,30 @@ const superAdminMenuItems: MenuItem[] = [
     {
         label: 'All Masters',
         path: '/all-master',
-        icon: <Users className="w-5 h-5" />,
+        icon: <Database className="w-5 h-5" />,
+        dropdown: true,
+        children: [
+            {
+                label: 'Basic Masters',
+                path: '/all-master/basic',
+                icon: <Folder className="w-4 h-4" />,
+            },
+            {
+                label: 'OFT & FLD Masters',
+                path: '/all-master/oft-fld',
+                icon: <Folder className="w-4 h-4" />,
+            },
+            {
+                label: 'Training Masters',
+                path: '/all-master/training',
+                icon: <Folder className="w-4 h-4" />,
+            },
+            {
+                label: 'Production Masters',
+                path: '/all-master/production',
+                icon: <Folder className="w-4 h-4" />,
+            },
+        ],
     },
     {
         label: 'Role Management',
@@ -53,6 +83,29 @@ const superAdminMenuItems: MenuItem[] = [
         label: 'Form Management',
         path: '/forms',
         icon: <FileText className="w-5 h-5" />,
+        dropdown: true,
+        children: [
+            {
+                label: 'About KVK',
+                path: '/forms/about-kvk',
+                icon: <Building2 className="w-4 h-4" />,
+            },
+            {
+                label: 'Achievements',
+                path: '/forms/achievements',
+                icon: <ClipboardList className="w-4 h-4" />,
+            },
+            {
+                label: 'Success Stories',
+                path: '/forms/success-stories',
+                icon: <FileCheck className="w-4 h-4" />,
+            },
+            {
+                label: 'Projects',
+                path: '/forms/achievements/projects',
+                icon: <Briefcase className="w-4 h-4" />,
+            },
+        ],
     },
     {
         label: 'Module Images',
@@ -92,6 +145,71 @@ const regularMenuItems: MenuItem[] = [
         label: 'Form Management',
         path: '/forms',
         icon: <FileText className="w-5 h-5" />,
+        dropdown: true,
+        children: [
+            {
+                label: 'About KVK',
+                path: '/forms/about-kvk',
+                icon: <Building2 className="w-4 h-4" />,
+            },
+            {
+                label: 'Achievements',
+                path: '/forms/achievements',
+                icon: <ClipboardList className="w-4 h-4" />,
+            },
+        ],
+    },
+]
+
+// KVK menu items - Restricted access
+const kvkMenuItems: MenuItem[] = [
+    {
+        label: 'Dashboard',
+        path: '/dashboard',
+        icon: <LayoutDashboard className="w-5 h-5" />,
+    },
+    {
+        label: 'Form Management',
+        path: '/forms',
+        icon: <FileText className="w-5 h-5" />,
+        dropdown: true,
+        children: [
+            {
+                label: 'About KVK',
+                path: '/forms/about-kvk',
+                icon: <Building2 className="w-4 h-4" />,
+            },
+            {
+                label: 'Achievements',
+                path: '/forms/achievements',
+                icon: <ClipboardList className="w-4 h-4" />,
+            },
+            {
+                label: 'Success Stories',
+                path: '/forms/success-stories',
+                icon: <FileCheck className="w-4 h-4" />,
+            },
+            {
+                label: 'Projects',
+                path: '/forms/achievements/projects',
+                icon: <Briefcase className="w-4 h-4" />,
+            },
+        ],
+    },
+    {
+        label: 'Module Images',
+        path: '/module-images',
+        icon: <ImageIcon className="w-5 h-5" />,
+    },
+    {
+        label: 'Targets',
+        path: '/targets',
+        icon: <Target className="w-5 h-5" />,
+    },
+    {
+        label: 'Reports',
+        path: '/all-reports',
+        icon: <FileBarChart className="w-5 h-5" />,
     },
 ]
 
@@ -110,12 +228,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
     const searchInputRef = useRef<HTMLInputElement>(null)
 
-    // Roles that get admin UI (Create User, Role Management, User Management)
-    const adminRoles = ['super_admin', 'zone_admin', 'state_admin', 'district_admin', 'org_admin', 'kvk']
+    // Roles that get admin UI
+    const adminRoles = ['super_admin', 'zone_admin', 'state_admin', 'district_admin', 'org_admin']
     const isAdmin = user?.role && adminRoles.includes(user.role)
+    const isKvk = user?.role === 'kvk'
 
-    // Admins get full admin menu; others get regular menu
-    const menuItems = isAdmin ? superAdminMenuItems : regularMenuItems
+    // Determine menu items based on role
+    let menuItems = regularMenuItems
+    if (isAdmin) {
+        menuItems = superAdminMenuItems
+    } else if (isKvk) {
+        menuItems = kvkMenuItems
+    }
 
     // Debounce search query
     useEffect(() => {
@@ -125,13 +249,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         return () => clearTimeout(timer)
     }, [searchQuery])
 
-    // Filter menu items based on debounced search query with fuzzy matching
+    // Filter menu items based on search
     const filteredMenuItems = React.useMemo(() => {
         if (!debouncedSearchQuery.trim()) return menuItems
 
         const query = debouncedSearchQuery.toLowerCase()
 
-        // Simple fuzzy matching: checks if all characters in query appear in order
         const fuzzyMatch = (text: string, pattern: string): boolean => {
             let patternIdx = 0
             for (let i = 0; i < text.length && patternIdx < pattern.length; i++) {
@@ -150,7 +273,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
             if (matchesItem) return true
 
-            // Check children if any
             if (item.children) {
                 return item.children.some(child =>
                     child.label.toLowerCase().includes(query) ||
@@ -162,14 +284,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         })
     }, [menuItems, debouncedSearchQuery])
 
-    // Keyboard shortcut handler (Ctrl/Cmd + K)
+    // Keyboard shortcut handler
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k' && isOpen) {
                 e.preventDefault()
                 searchInputRef.current?.focus()
             }
-            // Escape to clear search
             if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
                 setSearchQuery('')
                 searchInputRef.current?.blur()
@@ -180,7 +301,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [isOpen])
 
-    // Highlight search matches in text
+    // Highlight search matches
     const highlightMatch = (text: string, query: string): React.ReactNode => {
         if (!query.trim()) return text
 
@@ -201,50 +322,77 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         )
     }
 
-    // Helper function to build unique path for menu items
-    const buildUniquePath = (item: MenuItem, parentPath: string = ''): string => {
-        return parentPath ? `${parentPath}::${item.path}::${item.label}` : `${item.path}::${item.label}`
+    // Mapping of route patterns to their parent dropdown paths
+    // This ensures child routes keep their parent menu items selected
+    const routeToParentMap: { pattern: RegExp; parentPath: string }[] = [
+        // Basic Masters children
+        { pattern: /^\/all-master\/(zones|states|organizations|universities|districts)/, parentPath: '/all-master/basic' },
+        // OFT & FLD Masters children
+        { pattern: /^\/all-master\/(oft|fld|cfld-crop|season)/, parentPath: '/all-master/oft-fld' },
+        // Training & Extension Masters children
+        { pattern: /^\/all-master\/(training-type|training-area|training-thematic|extension-activity|other-extension-activity|events)/, parentPath: '/all-master/training' },
+        // Production & Projects Masters children
+        { pattern: /^\/all-master\/(product-category|product-type|product|cra-croping-system|cra-farming-system|arya-enterprise)/, parentPath: '/all-master/production' },
+        // Form Management children
+        { pattern: /^\/forms\/(about-kvk|achievements|success-stories)/, parentPath: '/forms' },
+    ]
+
+    // Get the effective parent path for a given location
+    const getEffectiveParent = (pathname: string): string | null => {
+        for (const mapping of routeToParentMap) {
+            if (mapping.pattern.test(pathname)) {
+                return mapping.parentPath
+            }
+        }
+        return null
     }
 
-    // Auto-expand parent items when child route is active
-    useEffect(() => {
-        // Helper function to find parent unique paths for a given route
-        const findParentPaths = (
-            items: MenuItem[],
-            targetPath: string,
-            parents: string[] = [],
-            parentUniquePath: string = ''
-        ): string[] => {
-            for (const item of items) {
-                const currentUniquePath = buildUniquePath(item, parentUniquePath)
-                if (item.path === targetPath || targetPath.startsWith(item.path + '/')) {
-                    return parents // Return all parent paths
-                }
-                if (item.children) {
-                    const found = findParentPaths(
-                        item.children,
-                        targetPath,
-                        [...parents, currentUniquePath],
-                        currentUniquePath
-                    )
-                    if (found.length > 0) {
-                        return found
-                    }
-                }
-            }
-            return []
+    // Check if path is active
+    const isActive = (path: string): boolean => {
+        if (path === '#') return false
+        // Direct match
+        if (location.pathname === path || location.pathname.startsWith(path + '/')) {
+            return true
         }
+        // Check if current route maps to this path as a parent
+        const effectiveParent = getEffectiveParent(location.pathname)
+        if (effectiveParent && path === effectiveParent) {
+            return true
+        }
+        return false
+    }
 
-        const parentPaths = findParentPaths(menuItems, location.pathname)
-        if (parentPaths.length > 0) {
+    // Check if section is active (parent or any child)
+    const isSectionActive = (item: MenuItem): boolean => {
+        if (isActive(item.path)) return true
+        if (item.children) {
+            // Check if any child is directly active
+            if (item.children.some(child => isActive(child.path))) {
+                return true
+            }
+            // Also check if effective parent matches any child path
+            const effectiveParent = getEffectiveParent(location.pathname)
+            if (effectiveParent && item.children.some(child => child.path === effectiveParent)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    // Auto-expand items with active children
+    useEffect(() => {
+        const itemsToExpand: string[] = []
+
+        menuItems.forEach(item => {
+            if (item.children && item.dropdown && isSectionActive(item)) {
+                itemsToExpand.push(item.path)
+            }
+        })
+
+        if (itemsToExpand.length > 0) {
             setExpandedItems(prev => {
-                const newExpanded = [...new Set([...prev, ...parentPaths])]
-                // Only update if there are new paths to add
-                if (newExpanded.length === prev.length &&
-                    newExpanded.every(path => prev.includes(path))) {
-                    return prev
-                }
-                return newExpanded
+                const newItems = [...new Set([...prev, ...itemsToExpand])]
+                return newItems
             })
         }
     }, [location.pathname, menuItems])
@@ -261,189 +409,127 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         )
     }
 
-    const isActive = (path: string) => {
-        if (path === '#') return false
-        // Special handling for /all-master to highlight when any sub-route is active
-        if (path === '/all-master') {
-            return location.pathname.startsWith('/all-master')
-        }
-        // Special handling for /forms to highlight when any form route is active
-        if (path === '/forms') {
-            return location.pathname.startsWith('/forms')
-        }
+    // Render dropdown menu item with section styling
+    const renderDropdownItem = (item: MenuItem) => {
+        const isExpanded = expandedItems.includes(item.path)
+        const sectionActive = isSectionActive(item)
+        const [isHovered, setIsHovered] = React.useState(false)
+
         return (
-            location.pathname === path ||
-            location.pathname.startsWith(path + '/')
+            <div
+                key={item.path}
+                className="mx-2 my-1"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                {/* Section Container - darker bg when expanded, hover effect propagates */}
+                <div
+                    className={`rounded-xl transition-all duration-300 ${sectionActive
+                        ? 'bg-[#3d6540]'
+                        : isHovered ? 'bg-white/5'  : isExpanded ? 'bg-white/5' : ''
+                        }`}
+                >
+                    {/* Parent Button */}
+                    <button
+                        onClick={() => toggleExpanded(item.path)}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-t-xl transition-all duration-200 ${sectionActive
+                            ? 'text-white font-medium'
+                            : 'text-white/85 hover:text-white'
+                            } ${isExpanded ? '' : 'rounded-b-xl'}`}
+                        aria-expanded={isExpanded}
+                    >
+                        <div className={`flex items-center ${isOpen ? 'gap-3' : 'justify-center w-full'}`}>
+                            {item.icon && (
+                                <span className="shrink-0">
+                                    {item.icon}
+                                </span>
+                            )}
+                            {isOpen && (
+                                <span className="text-sm font-medium truncate">
+                                    {debouncedSearchQuery ? highlightMatch(item.label, debouncedSearchQuery) : item.label}
+                                </span>
+                            )}
+                        </div>
+                        {isOpen && (
+                            <ChevronDown
+                                className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                            />
+                        )}
+                    </button>
+
+                    {/* Dropdown Children Container */}
+                    {isOpen && (
+                        <div
+                            className={`overflow-hidden transition-all duration-300 ease-out ${isExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                                }`}
+                        >
+                            <div className="px-2 pb-2 pt-1 space-y-1">
+                                {item.children?.map(child => {
+                                    const childActive = isActive(child.path)
+
+                                    return (
+                                        <Link
+                                            key={child.path}
+                                            to={child.path}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${childActive
+                                                ? 'bg-white text-[#2d4a2f] font-semibold shadow-sm'
+                                                : 'text-white/85 hover:bg-white/10 hover:text-white'
+                                                }`}
+                                        >
+                                            {child.icon && (
+                                                <span className={`shrink-0 ${childActive ? 'text-[#3d6540]' : ''}`}>
+                                                    {child.icon}
+                                                </span>
+                                            )}
+                                            <span className="text-sm truncate">
+                                                {debouncedSearchQuery ? highlightMatch(child.label, debouncedSearchQuery) : child.label}
+                                            </span>
+                                        </Link>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         )
     }
 
-    const renderMenuItem = (
-        item: MenuItem,
-        level: number = 0,
-        parentPath: string = ''
-    ) => {
-        const hasChildren = item.children && item.children.length > 0
-        // Use unique path for expansion tracking to avoid conflicts
-        const uniquePath = parentPath ? `${parentPath}::${item.path}::${item.label}` : `${item.path}::${item.label}`
-        const isExpanded = expandedItems.includes(uniquePath)
-        const active = isActive(item.path)
-
-        // For super admin, check if any child is active to highlight parent
-        const hasActiveChild = hasChildren && item.children?.some(child => {
-            if (child.path !== '#') {
-                return isActive(child.path)
-            }
-            // Recursively check nested children
-            return child.children?.some(nestedChild => isActive(nestedChild.path))
-        })
-        const isItemActive = active || hasActiveChild
-
-        // Unified green theme styling for all roles
-        const getItemStyles = () => {
-            if (level === 0) {
-                // Top level items
-                return isItemActive
-                    ? 'bg-[#3d6540] text-white border-2 border-black/5 shadow-sm'
-                    : 'text-white/80 hover:bg-[#3d6540] hover:text-white'
-            } else {
-                // Nested items
-                return isItemActive
-                    ? 'bg-[#3d6540]/50 text-white'
-                    : 'text-white/70 hover:bg-[#3d6540] hover:text-white'
-            }
+    // Render regular menu item
+    const renderMenuItem = (item: MenuItem) => {
+        // If has dropdown children, use special rendering
+        if (item.children && item.dropdown) {
+            return renderDropdownItem(item)
         }
 
-        // Calculate indentation for nested items with better spacing
-        const indentClass = level > 0 ? `ml-${Math.min(level * 3, 12)}` : ''
-        const paddingClass = isOpen
-            ? (level === 0 ? 'px-3' : level === 1 ? 'px-3 pl-6' : 'px-3 pl-9')
-            : 'px-0 justify-center'
+        // Regular item
+        const active = isActive(item.path)
 
         return (
-            <div key={uniquePath} className={`${indentClass} transition-all duration-200`}>
-                {hasChildren ? (
-                    <>
-                        <div className="flex items-center group">
-                            {item.path !== '#' ? (
-                                <Link
-                                    to={item.path}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    onMouseDown={(e) => e.preventDefault()}
-                                    data-menu-item
-                                    tabIndex={debouncedSearchQuery ? 0 : -1}
-                                    className={`flex-1 flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'} ${paddingClass} py-2.5 mx-1 rounded-xl transition-all duration-200 ${getItemStyles()} ${isItemActive ? 'font-medium' : ''} ${
-                                        level > 0 ? 'text-sm' : ''
-                                    } outline-none focus:outline-none active:outline-none`}
-                                    aria-label={`Navigate to ${item.label}`}
-                                    aria-current={isItemActive ? 'page' : undefined}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' || e.key === ' ') {
-                                            e.preventDefault()
-                                            navigate(item.path)
-                                            setIsMobileMenuOpen(false)
-                                        }
-                                    }}
-                                >
-                                    {item.icon && (
-                                        <span className={`shrink-0 flex items-center justify-center ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
-                                            {item.icon}
-                                        </span>
-                                    )}
-                                    {isOpen && (
-                                        <span className={`${level > 0 ? 'text-sm' : 'text-sm'} truncate`}>
-                                            {debouncedSearchQuery ? highlightMatch(item.label, debouncedSearchQuery) : item.label}
-                                        </span>
-                                    )}
-                                </Link>
-                            ) : (
-                                <div className={`flex-1 flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'} ${paddingClass} py-2 mx-1 rounded-md transition-all duration-200 ${getItemStyles()} ${
-                                    level > 0 ? 'text-sm' : ''
-                                }`}>
-                                    {item.icon && (
-                                        <span className={`shrink-0 flex items-center justify-center ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
-                                            {item.icon}
-                                        </span>
-                                    )}
-                                    {isOpen && (
-                                        <span className={`${level > 0 ? 'text-sm' : 'text-sm'} truncate`}>
-                                            {debouncedSearchQuery ? highlightMatch(item.label, debouncedSearchQuery) : item.label}
-                                        </span>
-                                    )}
-                                </div>
-                            )}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    toggleExpanded(uniquePath)
-                                }}
-                                onMouseDown={(e) => e.preventDefault()}
-                                className={`px-1.5 py-2 rounded-xl transition-all duration-200 ${getItemStyles()} hover:opacity-80 outline-none focus:outline-none active:outline-none`}
-                                aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${item.label}`}
-                                aria-expanded={isExpanded}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter' || e.key === ' ') {
-                                        e.preventDefault()
-                                        toggleExpanded(uniquePath)
-                                    }
-                                }}
-                            >
-                                {isOpen && (
-                                    <span className="transition-transform duration-200 inline-block">
-                                        {isExpanded ? (
-                                            <ChevronDown className="w-4 h-4" />
-                                        ) : (
-                                            <ChevronRight className="w-4 h-4" />
-                                        )}
-                                    </span>
-                                )}
-                            </button>
-                        </div>
-                        {isOpen && (
-                            <div
-                                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                    isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                                }`}
-                            >
-                                <div className="mt-1 space-y-0.5">
-                                    {item.children?.map((child) =>
-                                        renderMenuItem(child, level + 1, uniquePath)
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </>
-                ) : (
-                    <Link
-                        to={item.path}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        onMouseDown={(e) => e.preventDefault()}
-                        data-menu-item
-                        tabIndex={debouncedSearchQuery ? 0 : -1}
-                        className={`flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'} ${paddingClass} py-2.5 mx-1 rounded-xl transition-all duration-200 ${getItemStyles()} ${isItemActive ? 'font-medium' : ''} ${
-                            level > 0 ? 'text-sm' : ''
-                        } outline-none focus:outline-none active:outline-none`}
-                        aria-label={`Navigate to ${item.label}`}
-                        aria-current={isItemActive ? 'page' : undefined}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault()
-                                navigate(item.path)
-                                setIsMobileMenuOpen(false)
-                            }
-                        }}
-                    >
+            <div key={item.path} className="mx-2 my-0.5">
+                <Link
+                    to={item.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 ${active
+                        ? 'bg-[#3d6540] text-white font-medium'
+                        : 'text-white/80 hover:bg-white/10 hover:text-white'
+                        }`}
+                    aria-current={active ? 'page' : undefined}
+                >
+                    <div className={`flex items-center ${isOpen ? 'gap-3' : 'justify-center w-full'}`}>
                         {item.icon && (
-                            <span className={`shrink-0 flex items-center justify-center ${level > 0 ? 'w-4 h-4' : 'w-5 h-5'}`}>
+                            <span className="shrink-0 opacity-90">
                                 {item.icon}
                             </span>
                         )}
                         {isOpen && (
-                            <span className={`${level > 0 ? 'text-sm' : 'text-sm'} truncate`}>
+                            <span className="text-sm truncate">
                                 {debouncedSearchQuery ? highlightMatch(item.label, debouncedSearchQuery) : item.label}
                             </span>
                         )}
-                    </Link>
-                )}
+                    </div>
+                </Link>
             </div>
         )
     }
@@ -453,22 +539,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-md border border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#487749] transition-all duration-200"
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md border border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#487749] transition-all duration-200"
                 aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMobileMenuOpen}
-                aria-controls="main-sidebar"
             >
-                {isMobileMenuOpen ? (
-                    <X className="w-6 h-6" />
-                ) : (
-                    <Menu className="w-6 h-6" />
-                )}
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
 
             {/* Mobile Overlay */}
             {isMobileMenuOpen && (
                 <div
-                    className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+                    className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
@@ -476,139 +557,101 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             {/* Sidebar */}
             <aside
                 id="main-sidebar"
-                className={`fixed top-0 left-0 h-screen bg-[#487749] border-r border-[#3d6540] z-40 transition-all duration-300 ${
-                    isOpen ? 'w-64' : 'w-16'
-                } ${
-                    isMobileMenuOpen
-                        ? 'translate-x-0'
-                        : '-translate-x-full lg:translate-x-0'
-                } overflow-y-auto shadow-sm`}
+                className={`fixed top-0 left-0 h-screen bg-[#487749] z-40 transition-all duration-300 ${isOpen ? 'w-64' : 'w-16'
+                    } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+                    } overflow-hidden shadow-xl`}
                 role="navigation"
                 aria-label="Main navigation"
-                style={{ height: '100vh' }}
             >
-                <div className="flex flex-col h-screen">
+                <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className={`flex items-center ${isOpen ? 'justify-between px-4' : 'justify-center px-0'} h-16 border-b border-[#3d6540]`}>
+                    <div className={`flex items-center ${isOpen ? 'justify-between px-4' : 'justify-center'} h-16 border-b border-white/10`}>
                         {isOpen && (
-                            <h2 className="text-lg font-semibold text-white">
+                            <h2 className="text-lg font-bold text-white tracking-wide">
                                 ATARI Zone IV
                             </h2>
                         )}
                         <button
                             onClick={onToggle}
-                            onMouseDown={(e) => e.preventDefault()}
-                            className="hidden lg:flex p-1.5 rounded-xl transition-all duration-200 outline-none focus:outline-none active:outline-none hover:bg-[#3d6540] text-white/80"
+                            className="hidden lg:flex p-2 rounded-lg transition-all duration-200 hover:bg-white/10 text-white/80 hover:text-white"
                             aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-                            aria-expanded={isOpen}
                         >
-                            {isOpen ? (
-                                <ChevronLeft className="w-5 h-5" />
-                            ) : (
-                                <ChevronRight className="w-5 h-5" />
-                            )}
+                            {isOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                         </button>
                     </div>
 
-                    {/* Search Menu - Enhanced with icon and keyboard shortcut hint */}
+                    {/* Search */}
                     {isOpen && (
-                        <div className="p-3 border-b border-[#3d6540]">
+                        <div className="p-3 border-b border-white/10">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/60" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                                 <input
                                     ref={searchInputRef}
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search menu... (Ctrl+K)"
-                                    className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl border-2 transition-all duration-200 bg-[#3d6540] border-black/5 text-white placeholder-white/50 focus:ring-2 focus:ring-white/30 focus:border-white/30 focus:outline-none"
-                                    aria-label="Search menu items"
-                                    aria-describedby="search-help-text"
-                                    role="searchbox"
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Escape') {
-                                            setSearchQuery('')
-                                            searchInputRef.current?.blur()
-                                        }
-                                        // Arrow down to navigate to first result
-                                        if (e.key === 'ArrowDown' && filteredMenuItems.length > 0) {
-                                            e.preventDefault()
-                                            const firstMenuItem = document.querySelector('[data-menu-item]') as HTMLElement
-                                            firstMenuItem?.focus()
-                                        }
-                                    }}
+                                    placeholder="Search... (Ctrl+K)"
+                                    className="w-full pl-9 pr-9 py-2.5 text-sm rounded-lg bg-white/10 border border-white/10 text-white placeholder-white/50 focus:bg-white/15 focus:border-white/20 focus:outline-none transition-all duration-200"
+                                    aria-label="Search menu"
                                 />
-                                <span id="search-help-text" className="sr-only">
-                                    Search menu items by name. Use arrow keys to navigate results, Enter to select, Escape to clear.
-                                </span>
                                 {searchQuery && (
                                     <button
                                         onClick={() => {
                                             setSearchQuery('')
                                             searchInputRef.current?.focus()
                                         }}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-xl hover:bg-[#2d4d30] text-white/70 transition-all duration-200"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-white/10 text-white/50 hover:text-white/80"
                                         aria-label="Clear search"
                                     >
-                                        <X className="w-4 h-4" />
+                                        <X className="w-3.5 h-3.5" />
                                     </button>
                                 )}
                             </div>
                         </div>
                     )}
 
-                    {/* MENU Label */}
+                    {/* Navigation Label */}
                     {isOpen && (
-                        <div className="px-3 pt-3 pb-2">
-                            <span className="text-white/60 text-xs font-semibold uppercase tracking-wider">Navigation</span>
+                        <div className="px-4 pt-4 pb-2">
+                            <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40">
+                                Navigation
+                            </span>
                         </div>
                     )}
 
                     {/* Menu Items */}
-                    <nav className="flex-1 overflow-y-auto p-2 space-y-0.5" role="menu" aria-label="Navigation menu">
+                    <nav className="flex-1 overflow-y-auto py-1 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30" role="menu">
                         {filteredMenuItems.length > 0 ? (
-                            filteredMenuItems.map((item) => (
-                                <div key={`${item.path}-${item.label}`}>
-                                    {renderMenuItem(item)}
-                                </div>
-                            ))
+                            filteredMenuItems.map(item => renderMenuItem(item))
                         ) : (
-                                <div className="px-4 py-8 text-center text-white/60">
-                                <p className="text-sm">No menu items found</p>
-                                <p className="text-xs mt-1">Try a different search term</p>
+                            <div className="px-4 py-8 text-center text-white/50">
+                                <p className="text-sm">No items found</p>
                             </div>
                         )}
                     </nav>
 
-                    {/* Logout Button - Always visible at bottom */}
-                        {user && (
-                        <div className="p-3 border-t border-[#3d6540]">
-                                {isOpen && user && (
-                                <div className="mb-3 px-1 text-xs text-white/70">
-                                    <p className="font-medium text-white">{user.name}</p>
-                                    <p className="text-white/70">
+                    {/* User Info & Logout */}
+                    {user && (
+                        <div className="p-3 border-t border-white/10">
+                            {isOpen && (
+                                <div className="mb-3 px-2">
+                                    <p className="font-medium text-sm text-white truncate">{user.name}</p>
+                                    <p className="text-xs text-white/60 truncate">
                                         {user.role === 'super_admin'
-                                            ? 'ATARI Super Admin'
-                                            : ['zone_admin', 'state_admin', 'district_admin', 'org_admin'].includes(user.role)
-                                            ? 'Admin'
+                                            ? 'Super Admin'
                                             : user.role === 'kvk'
-                                            ? 'KVK User'
-                                            : 'User'}
+                                                ? 'KVK User'
+                                                : 'Admin'}
                                     </p>
                                 </div>
                             )}
                             <button
                                 onClick={handleLogout}
-                                onMouseDown={(e) => e.preventDefault()}
-                                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border-2 transition-all duration-200 outline-none focus:outline-none active:outline-none text-white bg-[#3d6540] border-black/5 hover:bg-[#2d4d30]"
+                                className={`w-full flex items-center ${isOpen ? 'gap-3 px-3' : 'justify-center'} py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 hover:text-white transition-all duration-200`}
                                 aria-label="Logout"
                             >
                                 <LogOut className="w-4 h-4 shrink-0" />
-                                {isOpen && (
-                                    <span className="text-sm font-medium">
-                                        Logout
-                                    </span>
-                                )}
+                                {isOpen && <span className="text-sm font-medium">Logout</span>}
                             </button>
                         </div>
                     )}

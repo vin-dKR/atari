@@ -4,6 +4,7 @@ import {
     Routes,
     Route,
     Navigate,
+    Outlet,
 } from 'react-router-dom'
 import { setOnSessionExpired } from './services/api'
 import { useAuthStore } from './stores/authStore'
@@ -66,32 +67,36 @@ function App() {
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/dashboard" element={<Dashboard />} />
 
-                    {/* All Masters - Dynamic MasterView routes (includes basic masters AND OFT/FLD masters) */}
-                    {allMastersRoutes.map(route => (
-                        <Route
-                            key={route.path}
-                            path={route.path}
-                            element={
-                                <MasterView
-                                    title={route.title}
-                                    description={route.description}
-                                    fields={route.fields}
-                                    mockData={getAllMastersMockData(route.path)}
-                                />
-                            }
-                        />
-                    ))}
+                    {/* All Masters Router - Restricted to Admin Roles */}
+                    <Route element={<ProtectedRoute requiredRole={['super_admin', 'zone_admin', 'state_admin', 'district_admin', 'org_admin']}><Outlet /></ProtectedRoute>}>
+                        {allMastersRoutes.map(route => (
+                            <Route
+                                key={route.path}
+                                path={route.path}
+                                element={
+                                    <MasterView
+                                        title={route.title}
+                                        description={route.description}
+                                        fields={route.fields}
+                                        mockData={getAllMastersMockData(route.path)}
+                                    />
+                                }
+                            />
+                        ))}
+                        <Route path="/all-master/*" element={<AllMasters />} />
+                    </Route>
 
-                    {/* All Masters Catch-all */}
-                    <Route path="/all-master/*" element={<AllMasters />} />
+                    {/* Admin Pages - Restricted to Admin Roles */}
+                    <Route element={<ProtectedRoute requiredRole={['super_admin', 'zone_admin', 'state_admin', 'district_admin', 'org_admin']}><Outlet /></ProtectedRoute>}>
+                        <Route path="/role-view" element={<RoleManagement />} />
+                        <Route path="/view-users" element={<UserManagement />} />
+                        <Route path="/view-log-history" element={<LogHistory />} />
+                        <Route path="/view-email-notifications" element={<Notifications />} />
+                    </Route>
 
-                    {/* Admin Pages */}
-                    <Route path="/role-view" element={<RoleManagement />} />
-                    <Route path="/view-users" element={<UserManagement />} />
+                    {/* Features accessible to Admin and KVK */}
                     <Route path="/module-images" element={<ModuleImages />} />
                     <Route path="/targets" element={<Targets />} />
-                    <Route path="/view-log-history" element={<LogHistory />} />
-                    <Route path="/view-email-notifications" element={<Notifications />} />
                     <Route path="/all-reports" element={<Reports />} />
 
                     {/* Form Management */}
@@ -114,7 +119,6 @@ function App() {
 
                     {/* About KVK Routes - Dynamic */}
                     {aboutKvkRoutes.map(route => {
-                        // Map route paths to components
                         let Component: React.ComponentType<any> | null = null
 
                         if (route.path === '/forms/about-kvk/bank-account') {
@@ -143,7 +147,6 @@ function App() {
                             Component = AddStaff
                         }
 
-                        // Skip routes without components (they might be placeholders)
                         if (!Component) return null
 
                         return (

@@ -1,4 +1,4 @@
-const prisma = require('../config/prisma');
+const prisma = require('../config/prisma.js');
 
 /**
  * Repository for user-level permissions (UserPermission).

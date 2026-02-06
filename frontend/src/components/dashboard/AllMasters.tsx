@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
     MapPin,
@@ -72,7 +72,7 @@ export const AllMasters: React.FC = () => {
     }, [location.pathname, navigate])
 
     // Determine active tab based on current route
-    const getActiveTab = () => {
+    const getActiveTab = (): string => {
         const currentPath = location.pathname
         // Check for exact matches first
         const exactMatch = tabs.find(tab => currentPath === tab.path)
@@ -88,7 +88,8 @@ export const AllMasters: React.FC = () => {
         }
         if (currentPath.startsWith('/all-master/oft') ||
             currentPath.startsWith('/all-master/fld') ||
-            currentPath.startsWith('/all-master/cfld-crop')) {
+            currentPath.startsWith('/all-master/cfld-crop') ||
+            currentPath.startsWith('/all-master/season')) {
             return 'oft-fld'
         }
         if (currentPath.startsWith('/all-master/training') ||
@@ -109,32 +110,15 @@ export const AllMasters: React.FC = () => {
         return tabs[0].id
     }
 
-    const [activeTab, setActiveTab] = useState<string>(getActiveTab())
-
-    // Update active tab when route changes
-    React.useEffect(() => {
-        setActiveTab(getActiveTab())
-    }, [location.pathname])
-
-    const handleTabClick = (tab: Tab) => {
-        setActiveTab(tab.id)
-        navigate(tab.path)
-    }
-
-    const activeTabData = tabs.find(tab => tab.id === activeTab) || tabs[0]
+    const activeTabData = tabs.find(tab => tab.id === getActiveTab()) || tabs[0]
 
     return (
         <SidebarLayout
             title="All Masters"
             description="Manage all master data including zones, states, organizations, OFT, FLD, training, extension, production, and publications"
-            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, icon: tab.icon }))}
-            activeTab={activeTab}
-            onTabClick={(tabId) => {
-                const tab = tabs.find(t => t.id === tabId)
-                if (tab) handleTabClick(tab)
-            }}
+            hideTabs={true}
         >
-                {activeTabData.component}
+            {activeTabData.component}
         </SidebarLayout>
     )
 }
