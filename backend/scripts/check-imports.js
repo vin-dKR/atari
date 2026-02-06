@@ -10,8 +10,16 @@ const path = require("path");
 
 
 // Directories to check
-const SRC_DIR = path.join(__dirname, "..", "src");
-const API_DIR = path.join(__dirname, "..", "api");
+const BACKEND_ROOT = path.join(__dirname, "..");
+const DIRS_TO_CHECK = [
+    "controllers",
+    "services",
+    "repositories",
+    "routes",
+    "utils",
+    "config",
+    "all-masters"
+];
 
 // Patterns to match relative imports
 const RELATIVE_IMPORT_PATTERN = /from\s+['"](\.\.?\/[^'"]+)['"]/g;
@@ -19,7 +27,6 @@ const RELATIVE_REQUIRE_PATTERN = /require\s*\(\s*['"](\.\.?\/[^'"]+)['"]\s*\)/g;
 
 // Global errors array
 const errors = [];
-
 
 /**
  * Check if a file should be checked (TypeScript/JavaScript files)
@@ -134,16 +141,20 @@ function checkDirectory(dirPath) {
 function main() {
     console.log("🔍 Checking for missing .js extensions in imports...\n");
 
-    // Check src directory
-    if (fs.existsSync(SRC_DIR)) {
-        console.log(`📁 Checking ${SRC_DIR}...`);
-        checkDirectory(SRC_DIR);
+    // Check directories
+    for (const dirName of DIRS_TO_CHECK) {
+        const dirPath = path.join(BACKEND_ROOT, dirName);
+        if (fs.existsSync(dirPath)) {
+            console.log(`📁 Checking ${dirName}...`);
+            checkDirectory(dirPath);
+        }
     }
 
-    // Check api directory
-    if (fs.existsSync(API_DIR)) {
-        console.log(`📁 Checking ${API_DIR}...`);
-        checkDirectory(API_DIR);
+    // Check root files
+    const indexFile = path.join(BACKEND_ROOT, "index.js");
+    if (fs.existsSync(indexFile)) {
+        console.log(`📄 Checking index.js...`);
+        checkFile(indexFile);
     }
 
     // Report results

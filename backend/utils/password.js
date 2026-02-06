@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 
 const DEFAULT_BCRYPT_ROUNDS = 12;
