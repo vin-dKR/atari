@@ -1,4 +1,5 @@
 // Controller layer - handles HTTP requests/responses for authentication
+require('dotenv').config();
 const authService = require('../services/authService.js');
 
 const authController = {
