@@ -1,8 +1,7 @@
-const crypto = require('crypto');
 const authRepository = require('../repositories/authRepository.js');
 const userPermissionRepository = require('../repositories/userPermissionRepository.js');
 const { comparePassword } = require('../utils/password.js');
-const { generateAccessToken, generateRefreshToken, verifyToken } = require('../utils/jwt.js');
+const { generateAccessToken, generateRefreshToken, verifyToken, decodeToken } = require('../utils/jwt.js');
 const { validateEmail } = require('../utils/validation.js');
 
 /**
@@ -45,16 +44,12 @@ const authService = {
         const refreshExpiresAt = new Date();
         refreshExpiresAt.setDate(refreshExpiresAt.getDate() + 7);
 
-        // Create refresh token with unique temporary value, then update with real JWT
-        const tempToken = `temp_${user.userId}_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
-
-        const refreshTokenRecord = await authRepository.createRefreshToken(
+        // Create refresh token atomically (temp value → JWT update in one transaction)
+        const { token: refreshToken } = await authRepository.createRefreshTokenAtomic(
             user.userId,
-            tempToken,
-            refreshExpiresAt
+            refreshExpiresAt,
+            generateRefreshToken
         );
-        const refreshToken = generateRefreshToken(user.userId, refreshTokenRecord.tokenId);
-        await authRepository.updateRefreshToken(refreshTokenRecord.tokenId, refreshToken);
 
         // Update last login timestamp
         await authRepository.updateLastLogin(user.userId);
@@ -128,14 +123,11 @@ const authService = {
         const newRefreshExpiresAt = new Date();
         newRefreshExpiresAt.setDate(newRefreshExpiresAt.getDate() + 7);
 
-        const tempToken = `temp_${tokenRecord.userId}_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
-        const newTokenRecord = await authRepository.createRefreshToken(
+        const { token: newRefreshToken } = await authRepository.createRefreshTokenAtomic(
             tokenRecord.userId,
-            tempToken,
-            newRefreshExpiresAt
+            newRefreshExpiresAt,
+            generateRefreshToken
         );
-        const newRefreshToken = generateRefreshToken(tokenRecord.userId, newTokenRecord.tokenId);
-        await authRepository.updateRefreshToken(newTokenRecord.tokenId, newRefreshToken);
 
         return {
             accessToken,
@@ -150,21 +142,19 @@ const authService = {
      */
     logout: async (refreshToken) => {
         try {
-            // Verify token format first
-            verifyToken(refreshToken, 'refresh');
-
-            // Revoke the token — use findFirst to avoid throwing if already revoked/missing
-            const tokenRecord = await authRepository.findRefreshToken(refreshToken);
-            if (tokenRecord && !tokenRecord.revokedAt) {
-                await authRepository.revokeRefreshToken(refreshToken);
-            }
+            const decoded = verifyToken(refreshToken, 'refresh');
+            await authRepository.revokeAllUserTokens(decoded.userId);
             return true;
         } catch (error) {
-            // If token is invalid/expired, consider logout successful
-            if (error.message.includes('Invalid') || error.message.includes('expired')) {
-                return true;
-            }
-            throw error;
+            // Token may be expired/invalid — try decoding without verification
+            // so we can still revoke all tokens for the user
+            try {
+                const decoded = decodeToken(refreshToken);
+                if (decoded?.userId) {
+                    await authRepository.revokeAllUserTokens(decoded.userId);
+                }
+            } catch {}
+            return true;
         }
     },
 
