@@ -17,15 +17,29 @@ export class ApiError extends Error {
 /**
  * Call refresh endpoint with cookies; used on 401 to get new access token.
  * Uses raw fetch to avoid circular dependency with authApi.
+ * A mutex (refreshPromise) ensures only one refresh is in-flight at a time;
+ * concurrent 401s will await the same promise instead of racing.
  */
+let refreshPromise: Promise<boolean> | null = null;
+
 async function callRefreshEndpoint(baseUrl: string): Promise<boolean> {
-  const url = `${baseUrl}/auth/refresh`;
-  const response = await fetch(url, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  return response.ok;
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const url = `${baseUrl}/auth/refresh`;
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      return response.ok;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
 }
 
 /** Called when a 401 occurs and refresh failed (session expired). Set by app to logout. */

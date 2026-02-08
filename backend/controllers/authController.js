@@ -2,6 +2,16 @@
 require('dotenv').config();
 const authService = require('../services/authService.js');
 
+function getClearCookieOptions() {
+  const isProduction = process.env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    path: '/',
+  };
+}
+
 const authController = {
   /**
    * POST /api/auth/login
@@ -83,9 +93,10 @@ const authController = {
         message: 'Token refreshed successfully',
       });
     } catch (error) {
-      // Clear cookies on error
-      res.clearCookie('accessToken', { path: '/' });
-      res.clearCookie('refreshToken', { path: '/' });
+      // Clear cookies on error (must match set options for browser to remove them)
+      const clearOpts = getClearCookieOptions();
+      res.clearCookie('accessToken', clearOpts);
+      res.clearCookie('refreshToken', clearOpts);
       res.status(401).json({ error: error.message });
     }
   },
@@ -102,15 +113,17 @@ const authController = {
         await authService.logout(refreshToken);
       }
 
-      // Clear cookies
-      res.clearCookie('accessToken', { path: '/' });
-      res.clearCookie('refreshToken', { path: '/' });
+      // Clear cookies (must match set options for browser to remove them)
+      const clearOpts = getClearCookieOptions();
+      res.clearCookie('accessToken', clearOpts);
+      res.clearCookie('refreshToken', clearOpts);
 
       res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
       // Clear cookies even if there's an error
-      res.clearCookie('accessToken', { path: '/' });
-      res.clearCookie('refreshToken', { path: '/' });
+      const clearOpts = getClearCookieOptions();
+      res.clearCookie('accessToken', clearOpts);
+      res.clearCookie('refreshToken', clearOpts);
       res.status(200).json({ message: 'Logout successful' });
     }
   },

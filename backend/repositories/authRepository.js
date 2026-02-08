@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const prisma = require('../config/prisma.js');
 
 const authRepository = {
@@ -58,6 +59,29 @@ const authRepository = {
         return await prisma.refreshToken.update({
             where: { tokenId },
             data: { token },
+        });
+    },
+
+    /**
+     * Atomically create a refresh token: insert with temp value, generate JWT
+     * containing the tokenId, then update the record — all in one transaction.
+     * @param {number} userId - User ID
+     * @param {Date} expiresAt - Token expiration date
+     * @param {function} generateToken - (userId, tokenId) => JWT string
+     * @returns {Promise<{tokenId: number, token: string}>} Created token record
+     */
+    createRefreshTokenAtomic: async (userId, expiresAt, generateToken) => {
+        return await prisma.$transaction(async (tx) => {
+            const tempToken = `temp_${userId}_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
+            const record = await tx.refreshToken.create({
+                data: { userId, token: tempToken, expiresAt },
+            });
+            const jwt = generateToken(userId, record.tokenId);
+            await tx.refreshToken.update({
+                where: { tokenId: record.tokenId },
+                data: { token: jwt },
+            });
+            return { tokenId: record.tokenId, token: jwt };
         });
     },
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import {
     LayoutDashboard,
@@ -9,7 +9,6 @@ import {
     Menu,
     X,
     ChevronDown,
-    LogOut,
     Users,
     Search,
     Settings,
@@ -220,8 +219,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     const location = useLocation()
-    const navigate = useNavigate()
-    const { user, logout } = useAuthStore()
+    const { user } = useAuthStore()
     const [expandedItems, setExpandedItems] = useState<string[]>([])
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
@@ -396,12 +394,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             })
         }
     }, [location.pathname, menuItems])
-
-    const handleLogout = () => {
-        logout()
-        navigate('/login')
-        setIsMobileMenuOpen(false)
-    }
 
     const toggleExpanded = (path: string) => {
         setExpandedItems(prev =>
@@ -629,32 +621,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                             </div>
                         )}
                     </nav>
-
-                    {/* User Info & Logout */}
-                    {user && (
-                        <div className="p-3 border-t border-white/10">
-                            {isOpen && (
-                                <div className="mb-3 px-2">
-                                    <p className="font-medium text-sm text-white truncate">{user.name}</p>
-                                    <p className="text-xs text-white/60 truncate">
-                                        {user.role === 'super_admin'
-                                            ? 'Super Admin'
-                                            : user.role === 'kvk'
-                                                ? 'KVK User'
-                                                : 'Admin'}
-                                    </p>
-                                </div>
-                            )}
-                            <button
-                                onClick={handleLogout}
-                                className={`w-full flex items-center ${isOpen ? 'gap-3 px-3' : 'justify-center'} py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 hover:text-white transition-all duration-200`}
-                                aria-label="Logout"
-                            >
-                                <LogOut className="w-4 h-4 shrink-0" />
-                                {isOpen && <span className="text-sm font-medium">Logout</span>}
-                            </button>
-                        </div>
-                    )}
                 </div>
             </aside>
         </>
