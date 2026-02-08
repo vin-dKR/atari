@@ -8,6 +8,7 @@ interface AuthState {
     isAuthenticated: boolean
     isLoading: boolean
     error: string | null
+    isLoggingOut: boolean
     login: (credentials: LoginCredentials) => Promise<boolean>
     logout: () => Promise<void>
     checkAuth: () => Promise<boolean>
@@ -43,6 +44,7 @@ export const useAuthStore = create<AuthState>()(
             user: null,
             isAuthenticated: false,
             isLoading: false,
+            isLoggingOut: false,
             error: null,
 
             /**
@@ -79,16 +81,26 @@ export const useAuthStore = create<AuthState>()(
              * Logout user and clear session
              */
             logout: async (): Promise<void> => {
+                // Prevent duplicate logout calls
+                if (get().isLoggingOut) {
+                    return
+                }
+
+                // Immediately clear state to prevent re-authentication attempts
+                set({
+                    user: null,
+                    isAuthenticated: false,
+                    isLoading: false,
+                    isLoggingOut: true,
+                    error: null,
+                })
+                
                 try {
                     await authApi.logout()
                 } catch (error) {
                     console.error('Logout error:', error)
                 } finally {
-                    set({
-                        user: null,
-                        isAuthenticated: false,
-                        error: null,
-                    })
+                    set({ isLoggingOut: false })
                 }
             },
 

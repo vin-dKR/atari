@@ -13,13 +13,23 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     children,
     requiredRole,
 }) => {
-    const { isAuthenticated, user, hasRole, checkAuth, isLoading } = useAuthStore()
+    const { isAuthenticated, user, hasRole, checkAuth, isLoading, isLoggingOut } = useAuthStore()
     const [isChecking, setIsChecking] = useState(true)
 
     // Check authentication on mount
     useEffect(() => {
         const verifyAuth = async () => {
-            if (!isAuthenticated) {
+            // Don't check auth if:
+            // 1. Already loading
+            // 2. Currently logging out
+            // 3. User is already authenticated
+            if (isLoading || isLoggingOut || isAuthenticated) {
+                setIsChecking(false)
+                return
+            }
+
+            // Only check auth if we're not authenticated and not in logout flow
+            if (!isAuthenticated && !user) {
                 const authenticated = await checkAuth()
                 if (!authenticated) {
                     // Not authenticated, will redirect below
@@ -29,7 +39,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         }
 
         verifyAuth()
-    }, [isAuthenticated, checkAuth])
+    }, [isAuthenticated, checkAuth, isLoading, isLoggingOut, user])
 
     // Show loading state while checking auth
     if (isChecking || isLoading) {
